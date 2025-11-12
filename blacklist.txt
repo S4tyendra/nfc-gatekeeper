@@ -1,0 +1,3 @@
+# Create a new config file and add the blacklist rules
+echo "blacklist pn533_usb" | sudo tee /etc/modprobe.d/blacklist-acr122.conf
+echo "blacklist pn533" | sudo tee -a /etc/modprobe.d/blacklist-acr122.conf
