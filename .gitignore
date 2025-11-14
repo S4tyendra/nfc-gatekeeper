@@ -196,3 +196,4 @@ cython_debug/
 .cursorindexingignore
 
 
+smart_write_gui.py
