@@ -6,7 +6,7 @@ from smartcard.System import readers
 # [Class, INS, P1, P2, Lc, b0, b1, b2, b3]
 WRITE_PAGE_APDU_TPL = [0xFF, 0xD6, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00]
 
-print("✅ Custom Data Writer")
+print("✅ Test Clear (pages 0x10-0x28)")
 print("   Connect reader and tap card...")
 
 try:
@@ -20,25 +20,19 @@ try:
 
     connection = reader.createConnection()
     connection.connect()
-    print("\n💳 Card detected! Writing custom data...\n")
+    print("\n💳 Card detected! Clearing...\n")
 
-    # Data to write:
-    # Page 0x04: "2022" (ASCII)
-    # Page 0x05: "KUCP" (ASCII)
-    # Page 0x06: "1033" (ASCII)
-
-    data_to_write = {
-        0x04: [ord('I'), ord('I'), ord('I'), ord('T')],  # "2022"
-        0x05: [ord('K'), ord('O'), ord('T'), ord('A')],  # "KUCP"
-        0x06: [ord('U'), ord('S'), ord('E'), ord('R')]   # "1033"
-    }
+    # Generate data to write - all zeros for pages 0x10 to 0x28
+    data_to_write = {}
+    for page in range(0x00, 0x29):  # 0x10 to 0x28 inclusive
+        data_to_write[page] = [0x00, 0x00, 0x00, 0x00]
 
     for page, bytes_data in data_to_write.items():
         apdu = WRITE_PAGE_APDU_TPL[:]
         apdu[3] = page  # Set the page address
         apdu[5:9] = bytes_data  # Set the 4 bytes to write
 
-        print(f"📝 Writing to page 0x{page:02X}: {bytes_data} ('{chr(bytes_data[0])}{chr(bytes_data[1])}{chr(bytes_data[2])}{chr(bytes_data[3])}')")
+        print(f"📝 Writing to page 0x{page:02X} ({page}): {bytes_data}")
 
         data, sw1, sw2 = connection.transmit(apdu)
 
@@ -46,10 +40,9 @@ try:
             print(f"   ✅ Page 0x{page:02X} written successfully!")
         else:
             print(f"   ❌ Failed to write page 0x{page:02X}. Status: {sw1:02X} {sw2:02X}")
-            break
+            # DON'T break - continue trying
 
-    print("\n✅ Write operation complete!")
-    print("   You can now read the card to verify the data.")
+    print("\n✅ Operation complete!")
 
 except CardConnectionException:
     print("\n❌ Card removed during operation.")
