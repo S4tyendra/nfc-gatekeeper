@@ -281,9 +281,9 @@ class StudentCardObserver(CardObserver):
                 print(f"   ❌ DATABASE ERROR: {e}")
                 return  # Failed to log
 
-            # 5. Final success feedback
-            send_command(connection, BEEP_RED_BLINK_SUCCESS, suppress_error=True)
+            # 5. Print completion message, then beep
             print("   --- Ready for next card ---")
+            send_command(connection, BEEP_RED_BLINK_SUCCESS, suppress_error=True)
 
         except (NoCardException, CardConnectionException):
             # Card was removed. Clear last_uid so it can be read again.
