@@ -124,8 +124,12 @@ class GateObserver(CardObserver):
             # 6. Logic & DB
             student = database.get_student(student_id)
             student_name = student['NAME'] if student else "Unknown"
-            status = "success" if student else "warning"
-            msg = "Access Granted" if student else "Student not found"
+            
+            if student_id == "IIITKOTAUSER":
+                student_name = "Guest User"
+
+            status = "success" if student or student_id == "IIITKOTAUSER" else "warning"
+            msg = "Access Granted" if student or student_id == "IIITKOTAUSER" else "Student not found"
 
             # Log to DB
             database.log_entry(direction, student_id)
@@ -135,12 +139,16 @@ class GateObserver(CardObserver):
             send_command(connection, config.CMD_BEEP_SUCCESS)
 
             # 8. Notify UI (Async)
+            img_path = f"/api/images/{student_id}.png"
+            if student_id == "IIITKOTAUSER":
+                img_path = "/api/images/guest.png"
+
             event_data = {
                 "type": "tap",
                 "direction": direction,
                 "student_id": student_id,
                 "name": student_name,
-                "image_path": f"/api/images/{student_id}.png",
+                "image_path": img_path,
                 "timestamp": datetime.datetime.now().isoformat(),
                 "status": status,
                 "message": msg

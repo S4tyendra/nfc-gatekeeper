@@ -11,7 +11,7 @@ def get_db_connection(path):
 
 def init_students_db():
     with get_db_connection(STUDENTS_DB) as conn:
-        conn.execute("CREATE TABLE IF NOT EXISTS students (id TEXT PRIMARY KEY, name TEXT)")
+        conn.execute("CREATE TABLE IF NOT EXISTS students (ID TEXT PRIMARY KEY, NAME TEXT)")
         conn.commit()
 
 def get_monthly_db_path(prefix):
@@ -24,18 +24,18 @@ def init_monthly_db(path, table_name):
         if table_name == 'entries':
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS entries (
-                    cuidv2 TEXT PRIMARY KEY,
-                    student_id TEXT,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    CUIDV2 TEXT PRIMARY KEY,
+                    STUDENT_ID TEXT,
+                    TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             """)
         elif table_name == 'logs':
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS logs (
-                    cuidv2 TEXT PRIMARY KEY,
-                    log TEXT,
-                    student_id TEXT,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    CUIDV2 TEXT PRIMARY KEY,
+                    LOG TEXT,
+                    STUDENT_ID TEXT,
+                    TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             """)
         conn.commit()
@@ -43,7 +43,7 @@ def init_monthly_db(path, table_name):
 def get_student(student_id):
     try:
         with get_db_connection(STUDENTS_DB) as conn:
-            cur = conn.execute("SELECT * FROM students WHERE id = ?", (student_id,))
+            cur = conn.execute("SELECT * FROM students WHERE ID = ?", (student_id,))
             row = cur.fetchone()
             return dict(row) if row else None
     except Exception:
@@ -56,7 +56,7 @@ def log_entry(direction, student_id):
     cuid = str(uuid.uuid4())
     try:
         with get_db_connection(db_path) as conn:
-            conn.execute("INSERT INTO entries (cuidv2, student_id) VALUES (?, ?)", 
+            conn.execute("INSERT INTO entries (CUIDV2, STUDENT_ID) VALUES (?, ?)", 
                          (cuid, student_id))
             conn.commit()
         return True
@@ -73,7 +73,7 @@ def log_system_message(message, student_id="System", level="info"):
     cuid = str(uuid.uuid4())
     
     with get_db_connection(db_path) as conn:
-        conn.execute("INSERT INTO logs (cuidv2, log, student_id) VALUES (?, ?, ?)", 
+        conn.execute("INSERT INTO logs (CUIDV2, LOG, STUDENT_ID) VALUES (?, ?, ?)", 
                      (cuid, full_msg, student_id))
         conn.commit()
 
@@ -84,14 +84,23 @@ def get_recent_entries(direction, limit=30):
     
     entries = []
     with get_db_connection(db_path) as conn:
-        rows = conn.execute("SELECT * FROM entries ORDER BY timestamp DESC LIMIT ?", (limit,)).fetchall()
+        rows = conn.execute("SELECT * FROM entries ORDER BY TIMESTAMP DESC LIMIT ?", (limit,)).fetchall()
         for row in rows:
-            student = get_student(row['student_id'])
+            student = get_student(row['STUDENT_ID'])
+            
+            # Handle Guest User
+            img_path = f"/api/images/{row['STUDENT_ID']}.png"
+            name = student['NAME'] if student else "Unknown"
+            
+            if row['STUDENT_ID'] == "IIITKOTAUSER":
+                img_path = "/api/images/guest.png"
+                name = "Guest User"
+                
             entries.append({
-                "student_id": row['student_id'],
-                "timestamp": row['timestamp'],
-                "name": student['NAME'] if student else "Unknown",
-                "image_path": f"/api/images/{row['student_id']}.png"
+                "student_id": row['STUDENT_ID'],
+                "timestamp": row['TIMESTAMP'],
+                "name": name,
+                "image_path": img_path
             })
     return entries
 

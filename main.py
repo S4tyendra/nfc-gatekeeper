@@ -110,17 +110,24 @@ async def manual_entry(data: dict = Body(...)):
     
     student = database.get_student(sid)
     name = student['NAME'] if student else "Unknown"
+    if sid == "IIITKOTAUSER":
+        name = "Guest User"
     
     database.log_entry(direction, sid)
     database.log_system_message(f"Manual {direction.upper()}: {name}", sid)
     
+    # Determine Image Path
+    img_path = f"/api/images/{sid}.png"
+    if sid == "IIITKOTAUSER":
+        img_path = "/api/images/guest.png"
+
     # Notify UI
     await manager.broadcast({
         "type": "tap",
         "direction": direction,
         "student_id": sid,
         "name": name,
-        "image_path": f"/api/images/{sid}.png",
+        "image_path": img_path,
         "timestamp": datetime.datetime.now().isoformat(),
         "status": "success",
         "message": "Manual Entry"
