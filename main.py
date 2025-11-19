@@ -145,6 +145,10 @@ def set_config(config_data: dict = Body(...)):
 def get_recent(direction: str, limit: int = 30):
     return {"entries": database.get_recent_entries(direction, limit)}
 
+@app.get("/api/year-range")
+def get_year_range():
+    return database.get_year_range()
+
 @app.get("/api/images/{filename}")
 def get_image(filename: str):
     path = os.path.join(config.IMG_DIR, filename)

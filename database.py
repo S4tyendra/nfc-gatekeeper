@@ -104,5 +104,30 @@ def get_recent_entries(direction, limit=30):
             })
     return entries
 
+def get_year_range():
+    """Get the range of years from student IDs in the database."""
+    try:
+        with get_db_connection(STUDENTS_DB) as conn:
+            # Extract year from student ID (first 4 characters)
+            result = conn.execute("""
+                SELECT 
+                    MIN(CAST(substr(ID, 1, 4) AS INTEGER)) as min_year,
+                    MAX(CAST(substr(ID, 1, 4) AS INTEGER)) as max_year
+                FROM students
+                WHERE substr(ID, 1, 4) GLOB '[0-9][0-9][0-9][0-9]'
+            """).fetchone()
+            
+            if result and result['min_year'] and result['max_year']:
+                # Start from 2021 or the minimum year found, whichever is earlier
+                min_year = min(2021, result['min_year'])
+                return {"min_year": min_year, "max_year": result['max_year']}
+            else:
+                # Default range if no data
+                return {"min_year": 2021, "max_year": datetime.datetime.now().year}
+    except Exception as e:
+        print(f"Error getting year range: {e}")
+        # Default range on error
+        return {"min_year": 2021, "max_year": datetime.datetime.now().year}
+
 # Initialize on load
 init_students_db()
