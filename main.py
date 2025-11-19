@@ -162,6 +162,12 @@ async def manual_entry(data: dict = Body(...)):
     direction = data['direction']
     
     student = database.get_student(sid)
+
+    # Validate existence (unless it's the special guest user)
+    if not student and sid != "IIITKOTAUSER":
+        database.log_system_message(f"Manual Entry Denied: Student not found ({sid})", sid, level="warning")
+        return JSONResponse(status_code=404, content={"success": False, "error": "Student not found"})
+
     name = student['NAME'] if student else "Unknown"
     if sid == "IIITKOTAUSER":
         name = "Guest User"

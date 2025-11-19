@@ -205,7 +205,7 @@
             align-items: center;
             justify-content: center;
             font-size: 80px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             overflow: hidden;
         }
 
@@ -218,12 +218,21 @@
         .status-text {
             font-size: 28px;
             font-weight: 800;
-            margin-bottom: 5px;
+            margin-bottom: 20px;
         }
 
-        .status-sub {
+        .hero-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+            margin-top: 5px;
+        }
+
+        .hero-id {
             font-size: 18px;
             color: var(--text-light);
+            font-weight: 600;
+            margin-top: 5px;
         }
 
         .time-pill {
@@ -364,9 +373,10 @@
         <!-- Center: Activity -->
         <div class="center-panel">
             <div class="scan-area" id="mainCard">
-                <div class="big-avatar" id="heroImg">👤</div>
                 <div class="status-text" id="heroStatus" data-translate="status_wait">Ready to Scan</div>
-                <div class="status-sub" id="heroName">---</div>
+                <div class="big-avatar" id="heroImg">👤</div>
+                <div class="hero-name" id="heroName">---</div>
+                <div class="hero-id" id="heroID">---</div>
                 <div class="time-pill" id="heroTime">--:--</div>
             </div>
 
@@ -530,6 +540,7 @@
             const img = document.getElementById('heroImg');
             const status = document.getElementById('heroStatus');
             const name = document.getElementById('heroName');
+            const idField = document.getElementById('heroID');
             const time = document.getElementById('heroTime');
 
             // Reset classes
@@ -544,7 +555,8 @@
             }
 
             // Text
-            name.textContent = data.name || TRANSLATIONS[currentLang].unknown + ` (${data.student_id})`;
+            name.textContent = data.name || TRANSLATIONS[currentLang].unknown;
+            idField.textContent = data.student_id || "";
             time.textContent = new Date().toLocaleTimeString();
 
             // Color & Status Message
@@ -625,14 +637,21 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+
+                if (res.status === 404) {
+                    alert(currentLang === 'hi' ? "छात्र डेटाबेस में नहीं मिला!" : "Student not found in database!");
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (data.success) {
                     document.getElementById('manRoll').value = ""; // Clear
                 } else {
-                    alert("Error: " + data.error);
+                    alert("Error: " + (data.error || "Unknown error"));
                 }
             } catch (e) {
+                console.error(e);
                 alert("Connection Error");
             }
         }
