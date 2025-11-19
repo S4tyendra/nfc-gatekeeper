@@ -46,6 +46,26 @@ nfc_manager = None
 
 # --- Lifecycle Events ---
 
+import json
+
+CONFIG_FILE = os.path.join(config.DB_DIR, "reader_config.json")
+
+def load_saved_config():
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            return None
+    return None
+
+def save_reader_config(config_data):
+    try:
+        with open(CONFIG_FILE, 'w') as f:
+            json.dump(config_data, f)
+    except Exception as e:
+        print(f"Error saving config: {e}")
+
 @app.on_event("startup")
 async def startup_event():
     global nfc_manager
@@ -54,14 +74,35 @@ async def startup_event():
     print("Starting NFC Reader Manager...")
     try:
         nfc_manager = nfc_handler.ReaderManager(loop, manager.broadcast)
-        # Auto-configure first found readers
+        
+        # Try to load saved config
+        saved_config = load_saved_config()
         r_list = nfc_manager.get_readers()
-        if len(r_list) >= 2:
-            nfc_manager.update_config(r_list[0], r_list[1])
-            print(f"Auto-Config: IN={r_list[0]}, OUT={r_list[1]}")
-        elif len(r_list) == 1:
-            nfc_manager.update_config(r_list[0], None)
-            print(f"Auto-Config: IN={r_list[0]}")
+        
+        config_applied = False
+        if saved_config:
+            in_r = saved_config.get("in_reader")
+            out_r = saved_config.get("out_reader")
+            
+            # Prevent duplicate assignment
+            if in_r and out_r and in_r == out_r:
+                out_r = None # Default to clearing OUT
+
+            # Verify readers still exist
+            if (not in_r or in_r in r_list) and (not out_r or out_r in r_list):
+                nfc_manager.update_config(in_r, out_r)
+                print(f"Loaded Config: IN={in_r}, OUT={out_r}")
+                config_applied = True
+        
+        if not config_applied:
+            # Auto-configure first found readers
+            if len(r_list) >= 2:
+                nfc_manager.update_config(r_list[0], r_list[1])
+                print(f"Auto-Config: IN={r_list[0]}, OUT={r_list[1]}")
+            elif len(r_list) == 1:
+                nfc_manager.update_config(r_list[0], None)
+                print(f"Auto-Config: IN={r_list[0]}")
+                
     except Exception as e:
         print(f"Error initializing NFC: {e}")
 
@@ -88,8 +129,16 @@ def get_reader_config():
 
 @app.post("/api/readers/config")
 def set_config(config_data: dict = Body(...)):
+    in_r = config_data.get("in_reader")
+    out_r = config_data.get("out_reader")
+    
+    # Prevent duplicate assignment
+    if in_r and out_r and in_r == out_r:
+        return JSONResponse(status_code=400, content={"error": "Cannot assign same reader to both roles"})
+
     if nfc_manager:
-        nfc_manager.update_config(config_data.get("in_reader"), config_data.get("out_reader"))
+        nfc_manager.update_config(in_r, out_r)
+        save_reader_config(config_data)
     return {"success": True}
 
 @app.get("/api/entries/recent")
