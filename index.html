@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Gate Dashboard</title>
+    <style>
+        /* ... (Keep all existing styles up to student-list-item) ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a1a; color: #e0e0e0; overflow: hidden; }
+        .container { display: grid; grid-template-rows: auto 1fr auto; height: 100vh; padding: 16px; gap: 16px; }
+        .header { background: #2a2a2a; padding: 16px 24px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 24px; color: #32b8c8; }
+        .header-controls { display: flex; gap: 12px; align-items: center; }
+        .status-badge { padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 500; }
+        .status-connected { background: rgba(50, 184, 200, 0.2); color: #32b8c8; }
+        .status-disconnected { background: rgba(255, 84, 89, 0.2); color: #ff5459; }
+        .btn { padding: 8px 16px; background: #32b8c8; color: #1a1a1a; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
+        .btn:hover { background: #2da6b4; }
+        .btn-secondary { background: #3a3a3a; color: #e0e0e0; }
+        .btn-secondary:hover { background: #454545; }
+        .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; overflow: hidden; }
+        .section { background: #2a2a2a; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: #32b8c8; }
+        .reader-config { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .config-row { display: flex; gap: 12px; align-items: center; }
+        .config-row label { width: 60px; font-weight: 500; color: #a0a0a0; }
+        .config-row select { flex: 1; padding: 8px; background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; border-radius: 4px; font-size: 14px; }
+        .manual-entry { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 8px; margin-bottom: 16px; }
+        .manual-entry select, .manual-entry input { padding: 8px; background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; border-radius: 4px; font-size: 14px; }
+        .student-display { background: #1f1f1f; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; border: 2px solid transparent; transition: all 0.3s; }
+        .student-display.flash-success { border-color: #32b8c8; background: rgba(50, 184, 200, 0.1); }
+        .student-display.flash-error { border-color: #ff5459; background: rgba(255, 84, 89, 0.1); }
+        .student-display.flash-warning { border-color: #e68161; background: rgba(230, 129, 97, 0.1); }
+        .student-image { width: 120px; height: 120px; border-radius: 50%; background: #3a3a3a; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #5a5a5a; overflow: hidden; }
+        .student-image img { width: 100%; height: 100%; object-fit: cover; }
+        .student-name { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+        .student-id { font-size: 16px; color: #a0a0a0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+        .stat-card { background: #1f1f1f; padding: 12px; border-radius: 6px; }
+        .stat-label { font-size: 12px; color: #a0a0a0; margin-bottom: 4px; }
+        .stat-value { font-size: 20px; font-weight: 600; color: #32b8c8; }
+        .logs-container { flex: 1; background: #1f1f1f; border-radius: 6px; padding: 12px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 13px; }
+        .log-entry { padding: 6px 0; border-bottom: 1px solid #2a2a2a; }
+        .log-entry:last-child { border-bottom: none; }
+        .log-time { color: #6a6a6a; margin-right: 8px; }
+        .log-level { padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 8px; font-weight: 600; }
+        .log-level.info { background: rgba(50, 184, 200, 0.2); color: #32b8c8; }
+        .log-level.warning { background: rgba(230, 129, 97, 0.2); color: #e68161; }
+        .log-level.error { background: rgba(255, 84, 89, 0.2); color: #ff5459; }
+        .footer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .footer-stat { background: #2a2a2a; padding: 12px 16px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .footer-stat-label { font-size: 13px; color: #a0a0a0; }
+        .footer-stat-value { font-size: 16px; font-weight: 600; color: #32b8c8; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1f1f1f; }
+        ::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
+        .placeholder-text { color: #6a6a6a; font-size: 14px; }
+        .student-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
+        .user-info-card { display: flex; gap: 24px; align-items: center; background: #1f1f1f; padding: 24px; border-radius: 8px; min-height: 200px; }
+        .user-info-img { width: 150px; height: 150px; border-radius: 8px; background: #3a3a3a; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 64px; }
+        .user-info-img img { width: 100%; height: 100%; object-fit: cover; }
+        .user-info-details { flex: 1; }
+        .user-info-name { font-size: 32px; font-weight: 700; color: #32b8c8; margin-bottom: 8px; }
+        .user-info-id { font-size: 20px; color: #e0e0e0; margin-bottom: 16px; }
+        .user-info-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .meta-item-label { font-size: 12px; color: #a0a0a0; }
+        .meta-item-value { font-size: 16px; font-weight: 500; }
+
+        /* --- MODIFIED LIST CSS --- */
+        .student-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Push content to edges */
+            gap: 12px;
+            padding: 8px;
+            background: #1f1f1f;
+            border-radius: 6px;
+            border-left: 3px solid transparent;
+        }
+        
+        .student-list-item.in { border-left-color: #32b8c8; }
+        .student-list-item.out { border-left-color: #e68161; }
+
+        .student-list-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .student-list-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3a3a3a;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .student-list-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .student-list-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .student-list-name {
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .student-list-id {
+            font-size: 12px;
+            color: #808080;
+        }
+
+        .student-list-time {
+            font-size: 13px;
+            color: #a0a0a0;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<!-- (Keep Body Structure unchanged up to script) -->
+<div class="container">
+    <div class="header">
+        <h1>🎫 NFC Gate Dashboard</h1>
+        <div class="header-controls">
+            <span id="wsStatus" class="status-badge status-disconnected">Disconnected</span>
+            <button class="btn btn-secondary" onclick="refreshReaders()">🔄 Refresh</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Left Side: IN -->
+        <div class="section">
+            <div class="section-title">📥 ENTRY (IN)</div>
+            <div class="reader-config">
+                <div class="config-row">
+                    <label>Reader:</label>
+                    <select id="inReaderSelect" onchange="updateReaderConfig()">
+                        <option value="">Select reader...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="manual-entry">
+                <select id="inYear"><option value="2025">2025</option></select>
+                <select id="inDept"><option value="KUCP">KUCP</option><option value="KUEC">KUEC</option><option value="KUAD">KUAD</option></select>
+                <input type="text" id="inRoll" placeholder="0000" maxlength="4" pattern="[0-9]{4}">
+                <button class="btn" onclick="manualEntry('in')">Add</button>
+            </div>
+            <div id="inList" class="student-list"></div>
+        </div>
+
+        <!-- Right Side: OUT -->
+        <div class="section">
+            <div class="section-title">📤 EXIT (OUT)</div>
+            <div class="reader-config">
+                <div class="config-row">
+                    <label>Reader:</label>
+                    <select id="outReaderSelect" onchange="updateReaderConfig()">
+                        <option value="">Select reader...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="manual-entry">
+                <select id="outYear"><option value="2025">2025</option></select>
+                <select id="outDept"><option value="KUCP">KUCP</option><option value="KUEC">KUEC</option><option value="KUAD">KUAD</option></select>
+                <input type="text" id="outRoll" placeholder="0000" maxlength="4" pattern="[0-9]{4}">
+                <button class="btn" onclick="manualEntry('out')">Add</button>
+            </div>
+            <div id="outList" class="student-list"></div>
+        </div>
+
+        <!-- Last Tapped User Info -->
+        <div class="section">
+            <div class="section-title">👤 Last Tapped User</div>
+            <div class="user-info-card" id="lastUserCard">
+                <div class="user-info-img" id="lastUserImg">👤</div>
+                <div class="user-info-details">
+                    <div class="user-info-name" id="lastUserName">Waiting...</div>
+                    <div class="user-info-id" id="lastUserId">--</div>
+                    <div class="user-info-meta">
+                        <div>
+                            <div class="meta-item-label">Time</div>
+                            <div class="meta-item-value" id="lastUserTime">--:--:--</div>
+                        </div>
+                        <div>
+                            <div class="meta-item-label">Direction</div>
+                            <div class="meta-item-value" id="lastUserDirection">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs -->
+        <div class="section">
+            <div class="section-title">📋 Real-time Logs</div>
+            <div class="logs-container" id="logsContainer"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-stat"><span class="footer-stat-label">IN Today</span><span class="footer-stat-value" id="footerInToday">0</span></div>
+        <div class="footer-stat"><span class="footer-stat-label">OUT Today</span><span class="footer-stat-value" id="footerOutToday">0</span></div>
+        <div class="footer-stat"><span class="footer-stat-label">Active</span><span class="footer-stat-value" id="footerActive">0</span></div>
+        <div class="footer-stat"><span class="footer-stat-label">Server</span><span class="footer-stat-value">localhost:8080</span></div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:8080';
+    const WS_URL = 'ws://localhost:8080/ws';
+    let ws = null;
+    let reconnectInterval = null;
+    let inToday = 0;
+    let outToday = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        connectWebSocket();
+        loadReaders();
+        loadRecentEntries('in');
+        loadRecentEntries('out');
+    });
+
+    function connectWebSocket() {
+        ws = new WebSocket(WS_URL);
+        ws.onopen = () => {
+            console.log('WebSocket connected');
+            document.getElementById('wsStatus').className = 'status-badge status-connected';
+            document.getElementById('wsStatus').textContent = 'Connected';
+            if (reconnectInterval) clearInterval(reconnectInterval);
+        };
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'tap') handleCardTap(data);
+            else if (data.type === 'log') addLogEntry(data);
+        };
+        ws.onclose = () => {
+            document.getElementById('wsStatus').className = 'status-badge status-disconnected';
+            document.getElementById('wsStatus').textContent = 'Disconnected';
+            if (!reconnectInterval) reconnectInterval = setInterval(connectWebSocket, 3000);
+        };
+    }
+
+    function handleCardTap(data) {
+        updateLastUser(data);
+        addStudentToList(data.direction, data);
+        if (data.status === 'success') {
+            if (data.direction === 'in') inToday++;
+            if (data.direction === 'out') outToday++;
+            updateFooter();
+        }
+    }
+
+    function updateLastUser(data) {
+        const img = document.getElementById('lastUserImg');
+        if (data.image_path) img.innerHTML = `<img src="${API_BASE}${data.image_path}" onerror="this.parentElement.innerHTML='👤'">`;
+        else img.innerHTML = '👤';
+        
+        document.getElementById('lastUserName').textContent = data.name || 'Unknown';
+        document.getElementById('lastUserId').textContent = data.student_id || '--';
+        document.getElementById('lastUserTime').textContent = new Date(data.timestamp).toLocaleTimeString();
+        
+        const dirEl = document.getElementById('lastUserDirection');
+        dirEl.textContent = data.direction === 'in' ? 'ENTRY (IN)' : 'EXIT (OUT)';
+        dirEl.style.color = data.direction === 'in' ? '#32b8c8' : '#e68161';
+    }
+
+    // UPDATED: New List Item Layout
+    function createListItemHTML(student) {
+        let imageHTML = '<div class="student-list-img">👤</div>';
+        if (student.image_path) {
+            imageHTML = `<div class="student-list-img"><img src="${API_BASE}${student.image_path}" onerror="this.parentElement.innerHTML='👤'"></div>`;
+        }
+
+        return `
+            <div class="student-list-left">
+                ${imageHTML}
+                <div class="student-list-info">
+                    <div class="student-list-name">${student.name || 'Unknown'}</div>
+                    <div class="student-list-id">${student.student_id || ''}</div>
+                </div>
+            </div>
+            <div class="student-list-time">${new Date(student.timestamp).toLocaleTimeString()}</div>
+        `;
+    }
+
+    function addStudentToList(direction, student) {
+        const list = document.getElementById(direction === 'in' ? 'inList' : 'outList');
+        const item = document.createElement('div');
+        item.className = `student-list-item ${direction}`;
+        // ... inside addStudentToList function
+        item.innerHTML = createListItemHTML(student);
+        
+        // Add to top of list
+        list.insertBefore(item, list.firstChild);
+
+        // Keep max 30 items
+        while (list.children.length > 30) {
+            list.removeChild(list.lastChild);
+        }
+    }
+
+    async function loadRecentEntries(direction) {
+        try {
+            const response = await fetch(`${API_BASE}/api/entries/recent?direction=${direction}&limit=30`);
+            const data = await response.json();
+            
+            const listId = direction === 'in' ? 'inList' : 'outList';
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+
+            if (data.entries) {
+                data.entries.forEach(entry => {
+                    const item = document.createElement('div');
+                    item.className = `student-list-item ${direction}`;
+                    // Map API response to format needed by createListItemHTML
+                    item.innerHTML = createListItemHTML({
+                        name: entry.name,
+                        student_id: entry.student_id,
+                        timestamp: entry.timestamp,
+                        image_path: entry.image_path
+                    });
+                    list.appendChild(item);
+                });
+            }
+        } catch (error) {
+            console.error(`Failed to load ${direction} entries:`, error);
+        }
+    }
+
+    function addLogEntry(data) {
+        const container = document.getElementById('logsContainer');
+        const time = new Date(data.timestamp).toLocaleTimeString();
+
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="log-level ${data.level}">${data.level.toUpperCase()}</span>
+                <span>${data.message}</span>
+            `;
+
+        container.insertBefore(entry, container.firstChild);
+        while (container.children.length > 100) {
+            container.removeChild(container.lastChild);
+        }
+    }
+
+    async function loadReaders() {
+        try {
+            const response = await fetch(`${API_BASE}/api/readers`);
+            const data = await response.json();
+            const inSelect = document.getElementById('inReaderSelect');
+            const outSelect = document.getElementById('outReaderSelect');
+
+            inSelect.innerHTML = '<option value="">Select reader...</option>';
+            outSelect.innerHTML = '<option value="">Select reader...</option>';
+
+            data.readers.forEach(reader => {
+                inSelect.add(new Option(reader.name, reader.name));
+                outSelect.add(new Option(reader.name, reader.name));
+            });
+
+            const configRes = await fetch(`${API_BASE}/api/readers/config`);
+            const config = await configRes.json();
+            if (config.in_reader) inSelect.value = config.in_reader;
+            if (config.out_reader) outSelect.value = config.out_reader;
+        } catch (error) { console.error('Failed to load readers:', error); }
+    }
+
+    async function refreshReaders() {
+        try {
+            await fetch(`${API_BASE}/api/readers/refresh`, { method: 'POST' });
+            await loadReaders();
+        } catch (error) { console.error('Failed to refresh:', error); }
+    }
+
+    async function updateReaderConfig() {
+        const inReader = document.getElementById('inReaderSelect').value;
+        const outReader = document.getElementById('outReaderSelect').value;
+        try {
+            await fetch(`${API_BASE}/api/readers/config`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ in_reader: inReader, out_reader: outReader })
+            });
+        } catch (error) { console.error('Failed to update config:', error); }
+    }
+
+    async function manualEntry(direction) {
+        const year = document.getElementById(`${direction}Year`).value;
+        const dept = document.getElementById(`${direction}Dept`).value;
+        const roll = document.getElementById(`${direction}Roll`).value;
+
+        if (!roll || roll.length !== 4 || !/^\d+$/.test(roll)) {
+            alert('Please enter a valid 4-digit roll number');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/api/entry/manual`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ year, department: dept, roll_number: roll, direction })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                handleCardTap({
+                    type: 'tap',
+                    direction: direction,
+                    student_id: data.student_id,
+                    name: data.name,
+                    status: 'success',
+                    message: 'Manual entry logged',
+                    timestamp: new Date().toISOString()
+                });
+                document.getElementById(`${direction}Roll`).value = '';
+            } else {
+                alert(data.error || 'Failed to add entry');
+            }
+        } catch (error) {
+            console.error('Manual entry failed:', error);
+            alert('Failed to add entry');
+        }
+    }
+
+    function updateFooter() {
+        document.getElementById('footerInToday').textContent = inToday;
+        document.getElementById('footerOutToday').textContent = outToday;
+        document.getElementById('footerActive').textContent = inToday - outToday;
+    }
+</script>
+</body>
+</html>
