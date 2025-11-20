@@ -176,10 +176,8 @@ class ReaderManager:
         except:
             return []
 
-    # --- ADD THIS METHOD ---
     def get_config(self):
         return self.observer.reader_config
-    # -----------------------
 
     def update_config(self, in_reader, out_reader):
         self.observer.reader_config["in_reader"] = in_reader

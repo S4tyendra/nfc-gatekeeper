@@ -14,7 +14,6 @@ import nfc_handler
 
 app = FastAPI()
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,7 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- WebSocket Manager ---
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
@@ -44,7 +42,6 @@ class ConnectionManager:
 manager = ConnectionManager()
 nfc_manager = None
 
-# --- Lifecycle Events ---
 
 import json
 
@@ -112,20 +109,17 @@ def shutdown_event():
         nfc_manager.stop()
         print("NFC Monitor Stopped.")
 
-# --- API Endpoints ---
 @app.get("/api/readers")
 def get_readers():
     if not nfc_manager:
         return {"readers": []}
     return {"readers": [{"name": r} for r in nfc_manager.get_readers()]}
 
-# --- ADD THIS ENDPOINT ---
 @app.get("/api/readers/config")
 def get_reader_config():
     if not nfc_manager:
         return {"in_reader": None, "out_reader": None}
     return nfc_manager.get_config()
-# -------------------------
 
 @app.post("/api/readers/config")
 def set_config(config_data: dict = Body(...)):
@@ -210,6 +204,4 @@ def serve_ui():
     return FileResponse("index.html")
 
 if __name__ == "__main__":
-    # Run with: python main.py
-    # Access at http://localhost:8080
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
