@@ -188,7 +188,6 @@ async def manual_entry(data: dict = Body(...)):
     
     return {"success": True, "student_id": sid}
 
-# WebSocket Endpoint
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
@@ -198,10 +197,45 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
+# === AUDIT LOG ENDPOINTS ===
+
+@app.get("/api/dblog/entries")
+def get_dblog_entries(direction: str = 'all', month: str = None, student_id: str = None, limit: int = 100):
+    """Get entries for audit log with filtering."""
+    entries = database.get_all_entries(direction, month, student_id, limit)
+    return {"entries": entries}
+
+@app.get("/api/dblog/logs")
+def get_dblog_logs(month: str = None, limit: int = 100):
+    """Get system logs for audit log."""
+    logs = database.get_all_logs(month, limit)
+    return {"logs": logs}
+
+@app.get("/api/dblog/students")
+def get_dblog_students():
+    """Get all students for audit log."""
+    students = database.get_all_students()
+    return {"students": students}
+
+@app.get("/api/dblog/files")
+def get_dblog_files():
+    """Get list of database files."""
+    files = database.get_database_files()
+    return {"files": files}
+
+@app.get("/api/dblog/stats")
+def get_dblog_stats():
+    """Get statistics for audit log dashboard."""
+    return database.get_stats()
+
 # Serve UI
 @app.get("/")
 def serve_ui():
     return FileResponse("index.html")
+
+@app.get("/dblog")
+def serve_dblog():
+    return FileResponse("dblog.html")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
