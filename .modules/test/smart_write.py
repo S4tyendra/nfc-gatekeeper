@@ -57,11 +57,20 @@ def select_reader():
 def get_4_bytes_input(page_name):
     """Get 4 bytes of input from user"""
     while True:
-        data = input(f"Enter 4 characters for {page_name}: ").strip()
-        if len(data) == 4:
-            return [ord(c) for c in data]
-        else:
-            print("❌ Please enter exactly 4 characters")
+        try:
+            if page_name == 'page 0x04':
+                data = int(input("Enter 4 characters for Year: (e.g., 2022): ").strip())
+            elif page_name == 'page 0x05':
+                data = input("Enter 4 characters for Branch Code: (e.g., KUCP): ").strip()
+                data = data.upper()
+            else:
+                data = input(f"{page_name} - Enter 4 characters ID: ").strip()
+            if len(str(data)) == 4:
+                return [ord(c) for c in str(data)]
+            else:
+                print("❌ Please enter exactly 4 characters")
+        except ValueError:
+            print("❌ Please enter a valid Data")
 
 
 def get_starting_number():
@@ -165,6 +174,12 @@ def lock_card(connection):
     # Lock dynamic bytes (page 0xE2)
     for attempt in range(2):
         if not write_page(connection, 0xE2, [0xFF, 0xFF, 0xFF, 0x00]):
+            print(f"   ❌ Dynamic lock write {attempt + 1}/2 failed")
+            return True
+        time.sleep(0.05)
+
+    for attempt in range(2):
+        if not write_page(connection, 0x28, [0xFF, 0xFF, 0xFF, 0xBD]):
             print(f"   ❌ Dynamic lock write {attempt + 1}/2 failed")
             return True
         time.sleep(0.05)
