@@ -4,24 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gate Monitor</title>
+    <title>E-Bhojan | IIIT Kota Mess Management Portal</title>
     <style>
         :root {
-            --primary: #3b82f6;
-            --success: #22c55e;
-            --warning: #f97316;
-            --bg: #f8fafc;
+            --gov-blue: #003366;
+            --gov-saffron: #FF9933;
+            --gov-green: #138808;
+            --primary: #0055a5;
+            --bg: #f2f7fa;
             --card: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --border: #e2e8f0;
+            --text: #212529;
+            --border: #b0c4de;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         body {
@@ -33,179 +33,196 @@
             overflow: hidden;
         }
 
-        /* --- Header --- */
-        header {
-            background: var(--card);
-            height: 70px;
+        /* --- Top Accessibility Strip --- */
+        .top-gov-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            height: 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            z-index: 10;
+            align-items: center;
+            padding: 0 4%;
+            font-size: 11px;
+            font-weight: bold;
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary);
+        .top-gov-bar .left {
+            display: flex;
+            gap: 15px;
+        }
+
+        .top-gov-bar a {
+            text-decoration: none;
+            color: #444;
+        }
+
+        /* --- Institution Header --- */
+        header {
+            background: white;
+            padding: 15px 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--gov-blue);
+        }
+
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .lang-switch {
-            display: flex;
-            background: #edf2f7;
-            border-radius: 8px;
-            padding: 4px;
-            gap: 5px;
-        }
-
-        .lang-btn {
-            border: none;
-            background: transparent;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-light);
-            transition: 0.2s;
-        }
-
-        .lang-btn.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* --- Main Layout --- */
-        .container {
-            display: grid;
-            grid-template-columns: 320px 1fr 320px;
             gap: 20px;
-            padding: 20px;
-            height: calc(100vh - 70px);
         }
 
-        /* --- Side Lists (History) --- */
-        .side-panel {
-            background: var(--card);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border);
-            overflow: hidden;
+        .inst-logo {
+            height: 85px;
+            width: auto;
         }
 
-        .panel-header {
-            padding: 15px;
-            background: #f1f5f9;
-            border-bottom: 1px solid var(--border);
+        .inst-title {
+            border-left: 2px solid #ccc;
+            padding-left: 20px;
         }
 
-        .panel-title {
-            font-size: 15px;
+        .inst-title .hindi {
+            font-size: 20px;
             font-weight: 700;
-            color: var(--text);
+            color: #000;
             display: block;
         }
 
-        .panel-subtitle {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 4px;
-        }
-
-        .list-scroller {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .person-card {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 8px;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-        }
-
-        .avatar-small {
-            width: 35px;
-            height: 35px;
-            background: #e2e8f0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
+        .inst-title .english {
             font-size: 18px;
+            font-weight: 600;
+            color: var(--gov-blue);
+            display: block;
+        }
+
+        .inst-title .subtitle {
+            font-size: 12px;
+            color: #d9534f;
+            font-style: italic;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        .header-right img {
+            height: 50px;
+        }
+
+        /* --- Scrolling Ticker --- */
+        .ticker-container {
+            background: #e9ecef;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
             overflow: hidden;
         }
 
-        .avatar-small img {
-            width: 100%;
+        .ticker-label {
+            background: #d9534f;
+            color: white;
+            padding: 0 15px;
             height: 100%;
-            object-fit: cover;
-        }
-
-        .person-info h4 {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .person-info p {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-
-        /* --- Center (Hero) --- */
-        .center-panel {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2;
         }
 
-        .scan-area {
+        .ticker-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+            font-size: 13px;
+            color: #333;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* --- Portal Navigation --- */
+        nav {
+            background: var(--gov-blue);
+            padding: 8px 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .session-badge {
+            background: var(--gov-saffron);
+            color: #000;
+            padding: 2px 10px;
+            font-weight: bold;
+            font-size: 12px;
+            border-radius: 2px;
+        }
+
+        /* --- Main Content --- */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
             flex: 1;
-            background: var(--card);
-            border-radius: 24px;
-            border: 2px solid var(--border);
+            gap: 20px;
+            padding: 20px 4%;
+            overflow: hidden;
+        }
+
+        .status-card {
+            background: white;
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            padding: 20px;
             position: relative;
-            transition: background 0.5s;
         }
 
-        /* Dynamic Backgrounds for Status */
-        .scan-area.status-in {
-            background: #ecfdf5;
-            border-color: var(--success);
+        .status-card::before {
+            content: "AUTHENTICATION GATEWAY";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #f8fafc;
+            padding: 5px 15px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 1px solid #eee;
         }
 
-        .scan-area.status-out {
-            background: #fff7ed;
-            border-color: var(--warning);
+        .status-card.success {
+            background: #f0fff4;
+            border: 2px solid var(--gov-green);
+        }
+
+        .status-card.denied {
+            background: #fff5f5;
+            border: 2px solid #d9534f;
         }
 
         .big-avatar {
-            width: 240px;
-            height: 240px;
-            border-radius: 6%;
-            background: #f1f5f9;
-            border: 5px solid white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 180px;
+            height: 220px;
+            background: #eee;
+            border: 4px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 80px;
-            margin-bottom: 10px;
+            font-size: 60px;
             overflow: hidden;
         }
 
@@ -215,484 +232,399 @@
             object-fit: cover;
         }
 
-        .status-text {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-
-        .hero-name {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--text);
-            margin-top: 5px;
-        }
-
-        .hero-id {
-            font-size: 18px;
-            color: var(--text-light);
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .time-pill {
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* --- Manual Entry --- */
-        .manual-box {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-
-        .manual-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-light);
-            margin-bottom: 15px;
+        .status-msg {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
-        .form-row {
+        .student-name {
+            font-size: 26px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-id {
+            font-size: 20px;
+            color: #555;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* --- Right Sidebar Panels --- */
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .panel-title {
+            background: #f1f5f9;
+            padding: 5px 10px;
+            margin: -15px -15px 15px -15px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--gov-blue);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
         }
 
-        .big-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            outline: none;
+        .input-box {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
-        .big-input:focus {
-            border-color: var(--primary);
-        }
-
-        .action-btn {
+        .btn {
             border: none;
-            padding: 0 25px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 15px;
+            padding: 10px;
+            font-weight: bold;
             cursor: pointer;
-            transition: opacity 0.2s;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background: var(--gov-blue);
             color: white;
         }
 
-        .btn-green {
-            background: var(--success);
+        .btn-success {
+            background: var(--gov-green);
+            color: white;
         }
 
-        .btn-orange {
-            background: var(--warning);
+        /* --- Footer --- */
+        footer {
+            background: #222;
+            color: #ccc;
+            padding: 10px 4%;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .action-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* Tech Settings (Hidden by default) */
-        .tech-trigger {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            opacity: 0.2;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .settings-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            border: 1px solid var(--border);
-            width: 300px;
-        }
-
-        .settings-modal.show {
-            display: block;
-        }
-
-        .backdrop {
+        /* --- Admin Modal --- */
+        .admin-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 99;
+            background: rgba(0, 0, 0, 0.8);
+            place-items: center;
+            z-index: 1000;
         }
 
-        .backdrop.show {
-            display: block;
+        .admin-content {
+            background: white;
+            width: 900px;
+            max-width: 95vw;
+        }
+
+        .admin-header {
+            background: var(--gov-blue);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
 
 <body>
+    <div class="top-gov-bar">
+        <div class="left">
+            <span>भारत सरकार | Government of India</span>
+            <span>शिक्षा मंत्रालय | Ministry of Education</span>
+        </div>
+        <div class="right">
+            <a href="#" onclick="setLang('hi')">हिन्दी</a> |
+            <a href="#" onclick="setLang('en')">English</a>
+        </div>
+    </div>
 
     <header>
-        <div class="logo">
-            <span>🛡️</span>
-            <span data-translate="app_title">Gate Security</span>
+        <div class="header-left">
+            <img src="iiitkota.png" alt="IIIT Kota Logo" class="inst-logo">
+            <div class="inst-title">
+                <span class="hindi">भारतीय सूचना प्रौद्योगिकी संस्थान कोटा</span>
+                <span class="english">Indian Institute of Information Technology Kota</span>
+                <span class="subtitle">An Institute of National Importance under an Act of Parliament</span>
+            </div>
         </div>
-        <div class="lang-switch">
-            <button class="lang-btn active" onclick="setLanguage('en')">English</button>
-            <button class="lang-btn" onclick="setLanguage('hi')">हिंदी (Hindi)</button>
+        <div class="header-right">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/95/Digital_India_logo.svg/1200px-Digital_India_logo.svg.png"
+                alt="Digital India">
         </div>
     </header>
 
-    <div class="container">
+    <nav>
+        <div>
+            <span data-t="session_info">Current Mess Session:</span>
+            <span class="session-badge" id="sessionTag">Loading...</span>
+        </div>
+        <div>
+            <button class="btn btn-primary" style="background:#444; border:1px solid #666;" onclick="toggleAdmin()"
+                data-t="btn_admin">ADMIN</button>
+        </div>
+    </nav>
 
-        <!-- Left: IN -->
-        <div class="side-panel">
-            <div class="panel-header">
-                <span class="panel-title" data-translate="list_in_title">Entry History</span>
-                <span class="panel-subtitle" data-translate="list_in_desc">People currently inside</span>
-            </div>
-            <div class="list-scroller" id="inList">
-                <!-- Items go here -->
+    <div class="main-layout">
+        <div class="scan-container">
+            <div class="status-card" id="mainCard">
+                <div class="status-msg" id="statusText" data-t="status_ready">System Ready</div>
+                <div class="big-avatar" id="heroImg">👤</div>
+                <div class="student-name" id="heroName" data-t="msg_wait">Please Present Card</div>
+                <div class="student-id" id="heroId"></div>
             </div>
         </div>
 
-        <!-- Center: Activity -->
-        <div class="center-panel">
-            <div class="scan-area" id="mainCard">
-                <div class="status-text" id="heroStatus" data-translate="status_wait">Ready to Scan</div>
-                <div class="big-avatar" id="heroImg">👤</div>
-                <div class="hero-name" id="heroName">---</div>
-                <div class="hero-id" id="heroID">---</div>
-                <div class="time-pill" id="heroTime">--:--</div>
+        <div class="tools-sidebar">
+            <div class="panel">
+                <div class="panel-title" data-t="manual_title">Manual Authorization</div>
+                <div style="display:flex; gap:5px;">
+                    <select id="manYear" class="input-box"></select>
+                    <select id="manDept" class="input-box">
+                        <option value="KUCP">CSE</option>
+                        <option value="KUEC">ECE</option>
+                    </select>
+                </div>
+                <input type="text" id="manRoll" class="input-box" placeholder="Enter Roll Number">
+                <button class="btn btn-success" style="width:100%" onclick="manualEntry()" data-t="btn_enter">Grant
+                    Access</button>
             </div>
 
-            <div class="manual-box">
-                <div class="manual-title" data-translate="manual_title">Card not working? Type ID</div>
-                <div class="form-row">
-                    <!-- Simplified inputs -->
-                    <select id="manYear" class="big-input" style="flex:0.5">
-                        <!-- Years populated by JS -->
-                    </select>
-                    <select id="manDept" class="big-input" style="flex:0.6">
-                        <option value="KUCP">KUCP</option>
-                        <option value="KUEC">KUEC</option>
-                        <option value="KUAD">KUAD</option>
-                    </select>
-                    <input type="tel" id="manRoll" class="big-input" placeholder="1234" maxlength="4">
-                    <button class="action-btn btn-green" onclick="manualEntry('in')" data-translate="btn_in">IN</button>
-                    <button class="action-btn btn-orange" onclick="manualEntry('out')"
-                        data-translate="btn_out">OUT</button>
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Attendance Log</span>
+                    <span id="entryCount" style="color:var(--gov-green)">0</span>
+                </div>
+                <div id="recentList" style="max-height: 300px; overflow-y: auto; font-size: 12px;">
+                    <div style="padding:10px; color:#999; text-align:center;">No data in current session</div>
+                </div>
+            </div>
+
+            <div style="font-size:10px; color:#666; padding:0 5px;">
+                <p id="debugTime"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h3 data-t="admin_export_title">Mess Administration Dashboard</h3>
+                <button class="btn btn-primary" onclick="toggleAdmin()">CLOSE [X]</button>
+            </div>
+            <div style="padding: 20px;">
+                <div
+                    style="display:flex; gap:10px; margin-bottom: 20px; background: #f1f1f1; padding:15px; border:1px solid #ccc;">
+                    <div style="flex:1">
+                        <label style="font-size:11px; font-weight:bold;">REPORTING MONTH</label>
+                        <input type="month" id="adminMonth" class="input-box" onchange="loadAdminData()">
+                    </div>
+                    <div style="display:flex; align-items:flex-end; padding-bottom:8px;">
+                        <button class="btn btn-primary" onclick="downloadCSV()">Generate CSV Report</button>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 2fr; gap:15px; margin-bottom: 20px;">
+                    <div style="border:1px solid #ccc; padding:15px; text-align:center;">
+                        <div style="font-size:11px; color:#666;">MONTHLY TOTAL</div>
+                        <div style="font-size:36px; font-weight:bold; color:var(--gov-blue);" id="statTotal">0</div>
+                    </div>
+                    <div style="border:1px solid #ccc; padding:10px;">
+                        <div id="statSessions" style="font-size:12px; line-height:1.6;"></div>
+                    </div>
+                </div>
+
+                <div style="height: 250px; overflow-y: auto; border:1px solid #ccc;">
+                    <table style="width:100%; text-align:left; border-collapse: collapse; font-size:12px;">
+                        <thead style="background:#eee; position:sticky; top:0;">
+                            <tr>
+                                <th style="padding:8px; border:1px solid #ccc;">Date</th>
+                                <th style="padding:8px; border:1px solid #ccc;">Breakfast</th>
+                                <th style="padding:8px; border:1px solid #ccc;">Lunch</th>
+                                <th style="padding:8px; border:1px solid #ccc;">Snacks</th>
+                                <th style="padding:8px; border:1px solid #ccc;">Dinner</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statTableBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-        <!-- Right: OUT -->
-        <div class="side-panel">
-            <div class="panel-header">
-                <span class="panel-title" data-translate="list_out_title">Exit History</span>
-                <span class="panel-subtitle" data-translate="list_out_desc">People who left recently</span>
-            </div>
-            <div class="list-scroller" id="outList">
-                <!-- Items go here -->
-            </div>
-        </div>
     </div>
 
-    <!-- Hidden Tech Settings -->
-    <div class="tech-trigger" onclick="toggleSettings()">⚙️</div>
-    <div class="backdrop" id="modalBackdrop" onclick="toggleSettings()"></div>
-    <div class="settings-modal" id="settingsModal">
-        <h3 style="margin-bottom:15px;">Technician Setup</h3>
-        <div style="margin-bottom:15px;">
-            <label style="display:block; font-size:12px; color:#64748b;">IN Reader Device</label>
-            <select id="inReaderSelect" class="big-input" style="width:100%"
-                onchange="handleReaderChange('in')"></select>
-        </div>
-        <div>
-            <label style="display:block; font-size:12px; color:#64748b;">OUT Reader Device</label>
-            <select id="outReaderSelect" class="big-input" style="width:100%"
-                onchange="handleReaderChange('out')"></select>
-        </div>
-        <div style="margin-top:10px; font-size:12px; color:#64748b;" id="wsStatusText">Disconnected</div>
-    </div>
+    <footer>
+        <div>Portal Last Updated: 21 Oct 2023 | Site designed by Satyendra, IIIT Kota</div>
+        <div>Best viewed in Google Chrome (Version 108+)</div>
+    </footer>
 
     <script>
-        /* --- Configuration --- */
-        const API_BASE = 'http://localhost:8080';
-        const WS_URL = 'ws://localhost:8080/ws';
+        const API_BASE = window.location.origin;
+        const WS_URL = `ws://${window.location.host}/ws`;
 
-        /* --- Language Dictionary --- */
-        const TRANSLATIONS = {
+        const TEXTS = {
             en: {
-                app_title: "Gate Security",
-                list_in_title: "Entry List",
-                list_in_desc: "Students who entered inside",
-                list_out_title: "Exit List",
-                list_out_desc: "Students who went outside",
-                status_wait: "Ready. Please tap card.",
-                status_in: "Allowed Entry",
-                status_out: "Exit Recorded",
-                manual_title: "Card not working? Enter details manually",
-                btn_in: "ENTER (IN)",
-                btn_out: "EXIT (OUT)",
-                unknown: "Unknown ID"
+                app_title: "E-Bhojan Portal",
+                btn_admin: "Admin Login",
+                status_ready: "System Ready",
+                msg_wait: "Please Present Card",
+                manual_title: "Manual Authorization",
+                btn_enter: "Grant Access",
+                session_info: "Current Mess Session:",
+                admin_export_title: "Mess Administration Dashboard",
+                allowed: "ACCESS GRANTED",
+                denied: "ACCESS DENIED",
+                error: "ERROR"
             },
             hi: {
-                app_title: "गेट सुरक्षा सिस्टम",
-                list_in_title: "अंदर आने वालों की लिस्ट",
-                list_in_desc: "जो छात्र अभी कॉलेज के अंदर आए हैं",
-                list_out_title: "बाहर जाने वालों की लिस्ट",
-                list_out_desc: "जो छात्र अभी गेट से बाहर गए हैं",
-                status_wait: "कार्ड मशीन पर लगाएं",
-                status_in: "स्वागत है (अंदर जाएं)",
-                status_out: "अलविदा (जा सकते हैं)",
-                manual_title: "अगर कार्ड खराब है, तो यहाँ रोल नंबर लिखें",
-                btn_in: "अंदर (IN)",
-                btn_out: "बाहर (OUT)",
-                unknown: "पहचान नहीं मिली"
+                app_title: "ई-भोजन पोर्टल",
+                btn_admin: "प्रशासक लॉगिन",
+                status_ready: "सिस्टम तैयार है",
+                msg_wait: "कृपया कार्ड दिखाएं",
+                manual_title: "मैनुअल प्राधिकरण",
+                btn_enter: "प्रवेश दें",
+                session_info: "वर्तमान मेस सत्र:",
+                admin_export_title: "मेस प्रशासन डैशबोर्ड",
+                allowed: "प्रवेश स्वीकृत",
+                denied: "प्रवेश वर्जित",
+                error: "त्रुटि"
             }
         };
 
-        let currentLang = 'en';
+        let curLang = 'en';
 
-        /* --- Initialization --- */
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Load Language Preference
-            const savedLang = localStorage.getItem('gate_lang');
-            if (savedLang) setLanguage(savedLang);
-            else setLanguage('en');
-
-            // 2. Load Years
-            loadYearRange();
-
-            // 3. Start System
-            connectWebSocket();
-            loadRecentData();
-            loadReaders(); // Silent technician load
-        });
-
-        /* --- Language Logic --- */
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('gate_lang', lang);
-
-            // Update Buttons UI
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            const btnIndex = lang === 'en' ? 0 : 1;
-            document.querySelectorAll('.lang-btn')[btnIndex].classList.add('active');
-
-            // Update Text on Screen
-            document.querySelectorAll('[data-translate]').forEach(el => {
-                const key = el.getAttribute('data-translate');
-                if (TRANSLATIONS[lang][key]) {
-                    el.textContent = TRANSLATIONS[lang][key];
-                }
+        function setLang(l) {
+            curLang = l;
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const k = el.getAttribute('data-t');
+                if (TEXTS[l][k]) el.textContent = TEXTS[l][k];
             });
+            resetCard();
+        }
 
-            // Reset Hero Text if waiting
-            const hero = document.getElementById('mainCard');
-            if (!hero.classList.contains('status-in') && !hero.classList.contains('status-out')) {
-                document.getElementById('heroStatus').textContent = TRANSLATIONS[lang].status_wait;
+        const curYear = new Date().getFullYear();
+        const sel = document.getElementById('manYear');
+        for (let i = curYear; i >= 2020; i--) sel.add(new Option(i, i));
+
+        const ws = new WebSocket(WS_URL);
+        ws.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            if (data.type === 'mess_response') {
+                handleResponse(data);
+                if (data.status === 'success') loadRecentEntries();
             }
-        }
+        };
 
-        /* --- WebSocket & Real-time Logic --- */
-        function connectWebSocket() {
-            const ws = new WebSocket(WS_URL);
-            const statusTxt = document.getElementById('wsStatusText');
-
-            ws.onopen = () => { statusTxt.textContent = "System Connected ✅"; statusTxt.style.color = "green"; };
-            ws.onclose = () => {
-                statusTxt.textContent = "Reconnecting...";
-                statusTxt.style.color = "red";
-                setTimeout(connectWebSocket, 3000);
-            };
-
-            ws.onmessage = (e) => {
-                const data = JSON.parse(e.data);
-                if (data.type === 'tap') handleTap(data);
-            };
-        }
-
-        function handleTap(data) {
-            // 1. Update Center Screen
-            updateHero(data);
-            // 2. Update Lists
-            addToList(data.direction, data);
-        }
-
-        function updateHero(data) {
+        function handleResponse(data) {
             const card = document.getElementById('mainCard');
-            const img = document.getElementById('heroImg');
-            const status = document.getElementById('heroStatus');
+            const txt = document.getElementById('statusText');
             const name = document.getElementById('heroName');
-            const idField = document.getElementById('heroID');
-            const time = document.getElementById('heroTime');
+            const id = document.getElementById('heroId');
+            const img = document.getElementById('heroImg');
 
-            // Reset classes
-            card.className = 'scan-area';
-            void card.offsetWidth; // force reflow
+            name.textContent = data.name;
+            id.textContent = data.student_id;
+            img.innerHTML = data.image_path ? `<img src="${data.image_path}">` : '👤';
 
-            // Image
-            if (data.image_path) {
-                img.innerHTML = `<img src="${API_BASE}${data.image_path}" onerror="this.parentElement.innerHTML='👤'">`;
+            card.className = 'status-card';
+            if (data.status === 'success') {
+                card.classList.add('success');
+                txt.textContent = TEXTS[curLang].allowed;
             } else {
-                img.innerHTML = '👤';
+                card.classList.add('denied');
+                txt.textContent = TEXTS[curLang].denied;
             }
-
-            // Text
-            name.textContent = data.name || TRANSLATIONS[currentLang].unknown;
-            idField.textContent = data.student_id || "";
-            time.textContent = new Date().toLocaleTimeString();
-
-            // Color & Status Message
-            if (data.direction === 'in') {
-                card.classList.add('status-in');
-                status.textContent = TRANSLATIONS[currentLang].status_in;
-            } else {
-                card.classList.add('status-out');
-                status.textContent = TRANSLATIONS[currentLang].status_out;
-            }
-
+            setTimeout(() => { if (name.textContent === data.name) resetCard(); }, 3000);
         }
 
-        /* --- List Management --- */
-        function addToList(direction, data) {
-            const listId = direction === 'in' ? 'inList' : 'outList';
-            const container = document.getElementById(listId);
-
-            let imgHtml = '<div class="avatar-small">👤</div>';
-            if (data.image_path) {
-                imgHtml = `<div class="avatar-small"><img src="${API_BASE}${data.image_path}" onerror="this.parentElement.innerHTML='👤'"></div>`;
-            }
-
-            const html = `
-                <div class="person-card">
-                    ${imgHtml}
-                    <div class="person-info">
-                        <h4>${data.name || 'Unknown'}</h4>
-                        <p>${data.student_id} • ${new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
-                </div>
-            `;
-
-            container.insertAdjacentHTML('afterbegin', html);
-            if (container.children.length > 30) container.lastElementChild.remove();
+        function resetCard() {
+            document.getElementById('mainCard').className = 'status-card';
+            document.getElementById('statusText').textContent = TEXTS[curLang].status_ready;
+            document.getElementById('heroName').textContent = TEXTS[curLang].msg_wait;
+            document.getElementById('heroId').textContent = "";
+            document.getElementById('heroImg').innerHTML = "👤";
         }
 
-        async function loadRecentData() {
-            try {
-                ['in', 'out'].forEach(async dir => {
-                    const res = await fetch(`${API_BASE}/api/entries/recent?direction=${dir}&limit=10`);
-                    const json = await res.json();
-                    const container = document.getElementById(dir === 'in' ? 'inList' : 'outList');
-                    container.innerHTML = '';
-                    if (json.entries) {
-                        json.entries.forEach(e => addToList(dir, e)); // Note: this reverses order, simple fix is sufficient for display
-                    }
-                });
-            } catch (e) { console.error("Error loading lists", e); }
-        }
-
-        /* --- Manual Entry --- */
-        async function loadYearRange() {
-            const yearSelect = document.getElementById('manYear');
-            const curYear = new Date().getFullYear();
-            for (let i = curYear; i >= 2020; i--) {
-                yearSelect.add(new Option(i, i));
-            }
-        }
-
-        async function manualEntry(direction) {
+        async function manualEntry() {
             const roll = document.getElementById('manRoll').value;
-            if (!roll) {
-                alert(currentLang === 'hi' ? "कृपया रोल नंबर भरें" : "Please enter Roll Number");
-                return;
-            }
-
-            const payload = {
-                year: document.getElementById('manYear').value,
-                department: document.getElementById('manDept').value,
-                roll_number: roll,
-                direction: direction
-            };
-
-            try {
-                const res = await fetch(`${API_BASE}/api/entry/manual`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (res.status === 404) {
-                    alert(currentLang === 'hi' ? "छात्र डेटाबेस में नहीं मिला!" : "Student not found in database!");
-                    return;
-                }
-
-                const data = await res.json();
-
-                if (data.success) {
-                    document.getElementById('manRoll').value = ""; // Clear
-                } else {
-                    alert("Error: " + (data.error || "Unknown error"));
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Connection Error");
-            }
-        }
-
-        /* --- Technician Settings (Hidden) --- */
-        function toggleSettings() {
-            document.getElementById('settingsModal').classList.toggle('show');
-            document.getElementById('modalBackdrop').classList.toggle('show');
-        }
-
-        async function loadReaders() {
-            // Fetch readers logic (same as previous, just hidden)
-            try {
-                const rRes = await fetch(`${API_BASE}/api/readers`);
-                const rData = await rRes.json();
-                const cRes = await fetch(`${API_BASE}/api/readers/config`);
-                const cData = await cRes.json();
-
-                const inSel = document.getElementById('inReaderSelect');
-                const outSel = document.getElementById('outReaderSelect');
-
-                [inSel, outSel].forEach(s => {
-                    s.innerHTML = '<option value="">-- Select --</option>';
-                    rData.readers.forEach(r => s.add(new Option(r.name, r.name)));
-                });
-
-                if (cData.in_reader) inSel.value = cData.in_reader;
-                if (cData.out_reader) outSel.value = cData.out_reader;
-
-            } catch (e) { console.log("Reader fetch failed"); }
-        }
-
-        function handleReaderChange() {
-            const inR = document.getElementById('inReaderSelect').value;
-            const outR = document.getElementById('outReaderSelect').value;
-            fetch(`${API_BASE}/api/readers/config`, {
+            if (!roll) return;
+            await fetch(`${API_BASE}/api/entry/manual`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ in_reader: inR, out_reader: outR })
+                body: JSON.stringify({
+                    year: document.getElementById('manYear').value,
+                    department: document.getElementById('manDept').value,
+                    roll_number: roll,
+                    direction: 'in'
+                })
             });
+            document.getElementById('manRoll').value = '';
         }
+
+        function toggleAdmin() {
+            const m = document.getElementById('adminModal');
+            m.style.display = (m.style.display !== 'grid') ? 'grid' : 'none';
+            if (m.style.display === 'grid') loadAdminData();
+        }
+
+        async function loadAdminData() {
+            const month = document.getElementById('adminMonth').value || new Date().toISOString().slice(0, 7);
+            document.getElementById('adminMonth').value = month;
+            try {
+                const res = await fetch(`/api/mess/stats?month=${month}`);
+                const data = await res.json();
+                document.getElementById('statTotal').textContent = data.monthly_total;
+                let sHtml = '';
+                for (const [k, v] of Object.entries(data.session_totals)) {
+                    sHtml += `<div><b>${k}:</b> ${v}</div>`;
+                }
+                document.getElementById('statSessions').innerHTML = sHtml;
+                const tbody = document.getElementById('statTableBody');
+                tbody.innerHTML = '';
+                Object.keys(data.daily_counts).sort().reverse().forEach(d => {
+                    const c = data.daily_counts[d];
+                    tbody.innerHTML += `<tr><td style="padding:8px; border:1px solid #ccc;">${d}</td><td style="padding:8px; border:1px solid #ccc;">${c['BREAKFAST'] || 0}</td><td style="padding:8px; border:1px solid #ccc;">${c['LUNCH'] || 0}</td><td style="padding:8px; border:1px solid #ccc;">${c['SNACKS'] || 0}</td><td style="padding:8px; border:1px solid #ccc;">${c['DINNER'] || 0}</td></tr>`;
+                });
+            } catch (e) { }
+        }
+
+        function downloadCSV() {
+            window.location.href = `/api/mess/export?month=${document.getElementById('adminMonth').value}`;
+        }
+
+        async function loadRecentEntries() {
+            try {
+                const res = await fetch('/api/mess/recent');
+                const entries = await res.json();
+                document.getElementById('entryCount').textContent = entries.length;
+                let html = '';
+                entries.forEach(e => {
+                    const time = new Date(e.timestamp).toLocaleTimeString();
+                    html += `<div style="padding:5px; border-bottom:1px solid #eee"><b>${time}</b> - ${e.name}</div>`;
+                });
+                document.getElementById('recentList').innerHTML = html || "No entries";
+            } catch (e) { }
+        }
+
+        async function updateSession() {
+            try {
+                const res = await fetch('/api/mess/session');
+                const data = await res.json();
+                document.getElementById('sessionTag').textContent = data.current_session || "CLOSED";
+                document.getElementById('debugTime').textContent = `Server Time: ${new Date().toLocaleString()}`;
+            } catch (e) { }
+        }
+        setInterval(updateSession, 5000);
+        setInterval(loadRecentEntries, 10000);
+        updateSession();
+        loadRecentEntries();
     </script>
 </body>
 

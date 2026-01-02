@@ -7,7 +7,6 @@ from smartcard.util import toHexString
 from smartcard.Exceptions import CardConnectionException, NoCardException
 
 import config
-import database
 
 # Global state to prevent double scanning
 last_scanned_uid = {}
@@ -40,73 +39,39 @@ def read_student_data(connection):
     result = f"{year}{code}{sid}".strip()
     return result if result else None
 
-def process_lock(connection):
-    # Check lock status (Page 0x28)
-    read_apdu = [0xFF, 0xB0, 0x00, config.LOCK_PAGE, 0x04]
-    success, data = send_command(connection, read_apdu)
-    
-    if success and data and len(data) >= 3:
-        # If byte 1 and 2 are FF, it's locked
-        if data[1] == 0xFF and data[2] == 0xFF:
-            return True # Already locked
-            
-    # Not locked, try to write
-    write_apdu = [0xFF, 0xD6, 0x00, config.LOCK_PAGE, 4] + config.LOCK_DATA
-    success, _ = send_command(connection, write_apdu)
-    return success
-
-class GateObserver(CardObserver):
+class MessObserver(CardObserver):
+    """
+    Simplified observer for Mess System.
+    Only reads student ID and calls callback. All logic handled in main.py.
+    """
     def __init__(self, callback_func):
         self.callback = callback_func
-        # Config mapping: Reader Name -> Direction
-        self.reader_config = {
-            "in_reader": None,
-            "out_reader": None
-        }
+        self.loop = None
 
     def update(self, observable, actions):
         (addedcards, removedcards) = actions
-        
-        # Handle card removal (reset debounce if needed, though time-based is safer)
-        if removedcards:
-             pass
-
         for card in addedcards:
             self.process_card(card)
 
     def process_card(self, card):
         reader_name = card.reader
-        direction = "unknown"
-        
-        # Determine direction
-        if reader_name == self.reader_config.get("in_reader"):
-            direction = "in"
-        elif reader_name == self.reader_config.get("out_reader"):
-            direction = "out"
-        else:
-            # Auto-assign if single reader or first time setup
-            if not self.reader_config["in_reader"]:
-                self.reader_config["in_reader"] = reader_name
-                direction = "in"
-            elif not self.reader_config["out_reader"]:
-                self.reader_config["out_reader"] = reader_name
-                direction = "out"
-
         connection = None
+        
         try:
             connection = card.createConnection()
             connection.connect()
 
             # 1. Get UID
             success, uid_data = send_command(connection, config.CMD_GET_UID)
-            if not success: return
+            if not success: 
+                return
             card_uid = toHexString(uid_data)
 
             # 2. Debounce Check
             now = time.time()
             if card_uid in last_scanned_uid:
                 if now - last_scanned_uid[card_uid] < debounce_time:
-                    return # Skip
+                    return # Skip duplicate
             last_scanned_uid[card_uid] = now
 
             # 3. Disable Beep (Silent mode until success)
@@ -118,42 +83,34 @@ class GateObserver(CardObserver):
                 print(f"Failed to read student data from {card_uid}")
                 return
 
-            # 5. Lock Card
-            process_lock(connection)
-
-            # 6. Logic & DB
-            student = database.get_student(student_id)
-            student_name = student['NAME'] if student else "Unknown"
-            
-            if student_id == "IIITKOTAUSER":
-                student_name = "Guest User"
-
-            status = "success" if student or student_id == "IIITKOTAUSER" else "warning"
-            msg = "Access Granted" if student or student_id == "IIITKOTAUSER" else "Student not found"
-
-            # Log to DB
-            database.log_entry(direction, student_id)
-            database.log_system_message(f"{direction.upper()}: {student_name} ({student_id})", student_id, "info")
-
-            # 7. Hardware Feedback (Beep + LED)
-            send_command(connection, config.CMD_BEEP_SUCCESS)
-
-            # 8. Notify UI (Async)
-            img_path = f"/api/images/{student_id}.png"
-            if student_id == "IIITKOTAUSER":
-                img_path = "/api/images/guest.png"
-
+            # 5. Call the callback with student_id
+            # Main.py will handle all logic (session check, duplicate check, logging)
             event_data = {
-                "type": "tap",
-                "direction": direction,
-                "student_id": student_id,
-                "name": student_name,
-                "image_path": img_path,
-                "timestamp": datetime.datetime.now().isoformat(),
-                "status": status,
-                "message": msg
+                "type": "tag",
+                "tag_id": student_id,
+                "card_uid": card_uid,
+                "reader": reader_name
             }
-            asyncio.run_coroutine_threadsafe(self.callback(event_data), self.loop)
+            
+            print(f"[NFC_HANDLER] Calling callback with: {event_data}")
+            if self.loop:
+                future = asyncio.run_coroutine_threadsafe(self.callback(event_data), self.loop)
+                try:
+                    result = future.result(timeout=5.0)
+                    print(f"[NFC_HANDLER] Callback result: {result}")
+                    
+                    # Only beep on SUCCESS
+                    if result and result.get("status") == "success":
+                        send_command(connection, config.CMD_BEEP_SUCCESS)
+                        print("[NFC_HANDLER] Beep sent (success)")
+                    else:
+                        print("[NFC_HANDLER] No beep (denied/error)")
+                        
+                except Exception as e:
+                    print(f"[NFC_HANDLER] Callback error: {e}")
+            else:
+                print("[NFC_HANDLER] ERROR: No event loop available!")
+
 
         except Exception as e:
             print(f"Card Error: {e}")
@@ -161,12 +118,13 @@ class GateObserver(CardObserver):
             if connection:
                 try:
                     connection.disconnect()
-                except: pass
+                except: 
+                    pass
 
 class ReaderManager:
     def __init__(self, loop, broadcast_func):
         self.monitor = CardMonitor()
-        self.observer = GateObserver(broadcast_func)
+        self.observer = MessObserver(broadcast_func)
         self.observer.loop = loop # Inject event loop
         self.monitor.addObserver(self.observer)
         
@@ -175,13 +133,6 @@ class ReaderManager:
             return [str(r) for r in readers()]
         except:
             return []
-
-    def get_config(self):
-        return self.observer.reader_config
-
-    def update_config(self, in_reader, out_reader):
-        self.observer.reader_config["in_reader"] = in_reader
-        self.observer.reader_config["out_reader"] = out_reader
 
     def stop(self):
         self.monitor.deleteObserver(self.observer)
