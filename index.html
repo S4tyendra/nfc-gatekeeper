@@ -56,43 +56,55 @@
         /* --- Main Official Header --- */
         header {
             background: white;
-            border-bottom: 4px solid var(--gov-saffron);
-            padding: 10px 2%;
+            padding: 15px 4%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
+            border-bottom: 4px solid var(--gov-blue);
         }
 
-        .logo-section {
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
-        .emblem {
-            height: 60px;
-        }
-
-        .title-group h1 {
-            font-size: 20px;
-            color: var(--gov-blue);
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            margin: 0;
-        }
-
-        .title-group p {
-            font-size: 12px;
-            color: #666;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .digital-india {
+        .inst-logo {
             height: 45px;
+            width: auto;
         }
+
+        .inst-title {
+            border-left: 2px solid #ccc;
+            padding-left: 20px;
+        }
+
+        .inst-title .hindi {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+            display: block;
+        }
+
+        .inst-title .english {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gov-blue);
+            display: block;
+        }
+
+        .inst-title .subtitle {
+            font-size: 14px;
+            color: #d9534f;
+            font-style: italic;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        .header-right img {
+            height: 50px;
+        }
+
 
         /* --- Layout --- */
         .container {
@@ -367,8 +379,7 @@
         <div>भारत सरकार | GOVERNMENT OF INDIA</div>
         <div>
             <a onclick="setLanguage('en')">English</a> |
-            <a onclick="setLanguage('hi')">हिन्दी</a> |
-            <a style="font-size: 14px;">A-</a> <a style="font-size: 14px;">A</a> <a style="font-size: 14px;">A+</a>
+            <a onclick="setLanguage('hi')">हिन्दी</a>
         </div>
     </div>
 
