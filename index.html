@@ -332,6 +332,210 @@
             display: flex;
             justify-content: space-between;
         }
+
+        /* --- Premium Animation Styles --- */
+        .premium-success-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
+            border: 2px solid #fff !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 10px 15px rgba(0, 0, 0, 0.05) !important;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Container for the 3D scene */
+        .anim-scene {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        /* The Cloche (Serving Dome) */
+        .cloche {
+            position: absolute;
+            width: 160px;
+            height: 100px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 80px 80px 5px 5px;
+            z-index: 20;
+            bottom: 30px;
+            box-shadow:
+                inset 10px 10px 20px rgba(255, 255, 255, 0.9),
+                inset -5px -10px 15px rgba(0, 0, 0, 0.1),
+                0 20px 30px rgba(0, 0, 0, 0.4);
+            transform-origin: bottom center;
+        }
+
+        .cloche-knob {
+            width: 26px;
+            height: 26px;
+            background: radial-gradient(circle at 30% 30%, #ffe9b0, #d4af37);
+            border-radius: 50%;
+            position: absolute;
+            top: -13px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid #c9a030;
+        }
+
+        .cloche-anim {
+            animation: clocheSequence 3s ease-in-out forwards;
+        }
+
+        @keyframes clocheSequence {
+            0% {
+                transform: translateY(-400px);
+                opacity: 0;
+            }
+
+            15% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            25% {
+                transform: scale(1.15, 0.85) translateY(5px);
+            }
+
+            35% {
+                transform: scale(1, 1) translateY(0);
+            }
+
+            45% {
+                transform: translateY(0);
+            }
+
+            /* Pause for anticipation */
+            65% {
+                transform: translateY(-50px) rotate(-5deg);
+                opacity: 1;
+            }
+
+            /* Lift */
+            100% {
+                transform: translateY(-400px) rotate(10deg);
+                opacity: 0;
+            }
+        }
+
+        /* The Meal Reveal */
+        .meal-reveal {
+            position: absolute;
+            bottom: 35px;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: mealAppear 0.5s 1.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes mealAppear {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .food-emoji {
+            font-size: 90px;
+            filter: drop-shadow(0 15px 15px rgba(0, 0, 0, 0.2));
+            animation: floatFood 2s ease-in-out infinite;
+        }
+
+        @keyframes floatFood {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* Steam Effect */
+        .vapour-container {
+            position: absolute;
+            top: -10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .vapour {
+            width: 8px;
+            height: 25px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            border-radius: 10px;
+            filter: blur(5px);
+            opacity: 0;
+            animation: rise 1.5s infinite;
+        }
+
+        .vapour:nth-child(1) {
+            animation-delay: 1.5s;
+            height: 20px;
+        }
+
+        .vapour:nth-child(2) {
+            animation-delay: 1.8s;
+            height: 35px;
+        }
+
+        .vapour:nth-child(3) {
+            animation-delay: 1.6s;
+            height: 25px;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scaleX(1);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(-50px) scaleX(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Text Effects */
+        .premium-text {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 38px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            animation: textPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -527,21 +731,88 @@
             const txt = document.getElementById('statusText');
             const name = document.getElementById('heroName');
             const id = document.getElementById('heroId');
-            const img = document.getElementById('heroImg');
+            const imgContainer = document.getElementById('heroImg');
 
             name.textContent = data.name;
             id.textContent = data.student_id;
-            img.innerHTML = data.image_path ? `<img src="${data.image_path}">` : '👤';
 
+            // Reset base classes
             card.className = 'status-card';
+            imgContainer.className = 'big-avatar';
+
             if (data.status === 'success') {
-                card.classList.add('success');
-                txt.textContent = TEXTS[curLang].allowed;
+                // --- PREMIUM SUCCESS ANIMATION ---
+                card.classList.add('premium-success-card');
+                txt.textContent = ""; // Clear text initially for custom element
+
+                // Create the Premium Animation DOM
+                const animHTML = `
+                    <div class="anim-scene">
+                        <div class="cloche cloche-anim">
+                            <div class="cloche-knob"></div>
+                        </div>
+                        <div class="meal-reveal">
+                            <div class="vapour-container">
+                                <span class="vapour"></span>
+                                <span class="vapour"></span>
+                                <span class="vapour"></span>
+                            </div>
+                            <div class="food-emoji">🥣</div>
+                        </div>
+                    </div>
+                `;
+
+                // Inject Animation
+                imgContainer.style.display = 'none'; // Hide default avatar box
+                /* We inject the animation BEFORE the name, or replace the avatar area */
+                let animArea = document.getElementById('animArea');
+                if (!animArea) {
+                    animArea = document.createElement('div');
+                    animArea.id = 'animArea';
+                    card.insertBefore(animArea, name);
+                }
+                animArea.innerHTML = animHTML;
+                animArea.style.display = 'block';
+
+                // Add magical text
+                const pText = document.createElement('div');
+                pText.className = 'premium-text';
+                pText.textContent = TEXTS[curLang].allowed;
+                txt.appendChild(pText);
+
+                // Play sound if available (optional, but requested "stunning")
+                // new Audio('/success.mp3').play().catch(()=>{}); 
+
             } else {
+                // Denied State
                 card.classList.add('denied');
                 txt.textContent = TEXTS[curLang].denied;
+                imgContainer.style.display = 'flex'; // Show avatar
+                imgContainer.innerHTML = data.image_path ? `<img src="${data.image_path}">` : '👤';
+                if (document.getElementById('animArea')) document.getElementById('animArea').style.display = 'none';
             }
-            setTimeout(() => { if (name.textContent === data.name) resetCard(); }, 3000);
+
+            setTimeout(() => {
+                if (name.textContent === data.name) resetCard();
+            }, 3500); // Extended to 3.5s to let animation finish
+        }
+
+        function resetCard() {
+            const card = document.getElementById('mainCard');
+            card.className = 'status-card';
+
+            // Clean up animation elements
+            const animArea = document.getElementById('animArea');
+            if (animArea) animArea.style.display = 'none';
+
+            const imgContainer = document.getElementById('heroImg');
+            imgContainer.style.display = 'flex';
+            imgContainer.innerHTML = "👤";
+            imgContainer.className = 'big-avatar'; // Reset class
+
+            document.getElementById('statusText').innerHTML = TEXTS[curLang].status_ready; // Use innerHTML to overwrite styled text
+            document.getElementById('heroName').textContent = TEXTS[curLang].msg_wait;
+            document.getElementById('heroId').textContent = "";
         }
 
         function resetCard() {
