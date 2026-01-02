@@ -4,24 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gate Monitor</title>
+    <title>E-Gate Portal | Security Management System</title>
     <style>
         :root {
-            --primary: #3b82f6;
-            --success: #22c55e;
-            --warning: #f97316;
-            --bg: #f8fafc;
+            --gov-blue: #003366;
+            --gov-saffron: #FF9933;
+            --gov-green: #138808;
+            --primary: #0055a5;
+            --bg: #f2f7fa;
             --card: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --border: #e2e8f0;
+            --text: #212529;
+            --border: #ced4da;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
         }
 
         body {
@@ -33,117 +33,131 @@
             overflow: hidden;
         }
 
-        /* --- Header --- */
-        header {
-            background: var(--card);
-            height: 70px;
+        /* --- GOI Accessibility Bar --- */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            height: 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            align-items: center;
+            padding: 0 2%;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .top-bar a {
+            text-decoration: none;
+            color: #444;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+
+        /* --- Main Official Header --- */
+        header {
+            background: white;
+            border-bottom: 4px solid var(--gov-saffron);
+            padding: 10px 2%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 10;
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary);
+        .logo-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .lang-switch {
-            display: flex;
-            background: #edf2f7;
-            border-radius: 8px;
-            padding: 4px;
-            gap: 5px;
+        .emblem {
+            height: 60px;
         }
 
-        .lang-btn {
-            border: none;
-            background: transparent;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
+        .title-group h1 {
+            font-size: 20px;
+            color: var(--gov-blue);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .title-group p {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
             font-weight: 600;
-            color: var(--text-light);
-            transition: 0.2s;
         }
 
-        .lang-btn.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .digital-india {
+            height: 45px;
         }
 
-        /* --- Main Layout --- */
+        /* --- Layout --- */
         .container {
             display: grid;
-            grid-template-columns: 320px 1fr 320px;
-            gap: 20px;
-            padding: 20px;
-            height: calc(100vh - 70px);
+            grid-template-columns: 340px 1fr 340px;
+            gap: 15px;
+            padding: 15px;
+            height: calc(100vh - 120px);
         }
 
-        /* --- Side Lists (History) --- */
+        /* --- Side Panels (The Registers) --- */
         .side-panel {
             background: var(--card);
-            border-radius: 16px;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border);
-            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .panel-header {
-            padding: 15px;
-            background: #f1f5f9;
-            border-bottom: 1px solid var(--border);
+            padding: 12px;
+            background: var(--gov-blue);
+            color: white;
+            border-bottom: 2px solid var(--gov-saffron);
         }
 
         .panel-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--text);
-            display: block;
+            text-transform: uppercase;
         }
 
         .panel-subtitle {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 4px;
+            font-size: 11px;
+            opacity: 0.8;
         }
 
         .list-scroller {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
+            padding: 8px;
+            background: #fdfdfd;
         }
 
         .person-card {
             display: flex;
             align-items: center;
-            padding: 10px;
-            margin-bottom: 8px;
+            padding: 8px;
+            margin-bottom: 6px;
             background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            border: 1px solid #eee;
+            border-left: 4px solid var(--gov-blue);
         }
 
         .avatar-small {
-            width: 35px;
-            height: 35px;
-            background: #e2e8f0;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px;
-            font-size: 18px;
-            overflow: hidden;
         }
 
         .avatar-small img {
@@ -153,59 +167,67 @@
         }
 
         .person-info h4 {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            color: var(--gov-blue);
         }
 
         .person-info p {
-            font-size: 12px;
-            color: var(--text-light);
+            font-size: 11px;
+            color: #666;
+            font-family: monospace;
         }
 
-        /* --- Center (Hero) --- */
+        /* --- Center (Authentication Area) --- */
         .center-panel {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .scan-area {
             flex: 1;
-            background: var(--card);
-            border-radius: 24px;
-            border: 2px solid var(--border);
+            background: white;
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--gov-blue);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            padding: 20px;
             position: relative;
-            transition: background 0.5s;
         }
 
-        /* Dynamic Backgrounds for Status */
         .scan-area.status-in {
-            background: #ecfdf5;
-            border-color: var(--success);
+            border-top-color: var(--gov-green);
+            background: #f8fff9;
         }
 
         .scan-area.status-out {
-            background: #fff7ed;
-            border-color: var(--warning);
+            border-top-color: var(--gov-saffron);
+            background: #fffbf5;
+        }
+
+        .status-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--gov-blue);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
         }
 
         .big-avatar {
-            width: 240px;
-            height: 240px;
-            border-radius: 6%;
-            background: #f1f5f9;
-            border: 5px solid white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            height: 200px;
+            border: 4px solid white;
+            box-shadow: 0 0 0 1px #ddd;
+            background: #fafafa;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 80px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
 
@@ -215,100 +237,97 @@
             object-fit: cover;
         }
 
-        .status-text {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-
         .hero-name {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--text);
-            margin-top: 5px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
         }
 
         .hero-id {
             font-size: 18px;
-            color: var(--text-light);
-            font-weight: 600;
-            margin-top: 5px;
+            color: #666;
+            font-family: monospace;
+            margin-top: 4px;
         }
 
         .time-pill {
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
+            margin-top: 15px;
+            background: #333;
+            color: white;
+            padding: 4px 15px;
+            font-size: 12px;
+            font-family: monospace;
         }
 
-        /* --- Manual Entry --- */
+        /* --- Manual Entry Form --- */
         .manual-box {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 16px;
+            background: #fff;
+            padding: 15px;
             border: 1px solid var(--border);
+            border-left: 5px solid var(--gov-saffron);
         }
 
         .manual-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-light);
-            margin-bottom: 15px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--gov-blue);
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .form-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .big-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            font-size: 14px;
             outline: none;
         }
 
         .big-input:focus {
-            border-color: var(--primary);
+            border-color: var(--gov-blue);
+            box-shadow: 0 0 3px rgba(0, 51, 102, 0.3);
         }
 
         .action-btn {
             border: none;
-            padding: 0 25px;
-            border-radius: 8px;
+            padding: 0 20px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 13px;
             cursor: pointer;
-            transition: opacity 0.2s;
             color: white;
+            text-transform: uppercase;
         }
 
         .btn-green {
-            background: var(--success);
+            background: var(--gov-green);
         }
 
         .btn-orange {
-            background: var(--warning);
+            background: var(--gov-saffron);
         }
 
-        .action-btn:hover {
-            opacity: 0.9;
+        /* --- Footer --- */
+        footer {
+            background: #eeeeee;
+            border-top: 1px solid #ddd;
+            padding: 8px 2%;
+            font-size: 11px;
+            text-align: center;
+            color: #666;
         }
 
-        /* Tech Settings (Hidden by default) */
+        /* Technician Settings */
         .tech-trigger {
             position: fixed;
-            bottom: 10px;
+            bottom: 40px;
             right: 10px;
-            opacity: 0.2;
+            opacity: 0.3;
             cursor: pointer;
-            font-size: 20px;
         }
 
         .settings-modal {
@@ -318,12 +337,10 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border: 1px solid #000;
             z-index: 100;
-            border: 1px solid var(--border);
-            width: 300px;
+            width: 320px;
         }
 
         .settings-modal.show {
@@ -334,7 +351,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 99;
         }
 
@@ -346,15 +363,26 @@
 
 <body>
 
+    <div class="top-bar">
+        <div>भारत सरकार | GOVERNMENT OF INDIA</div>
+        <div>
+            <a onclick="setLanguage('en')">English</a> |
+            <a onclick="setLanguage('hi')">हिन्दी</a> |
+            <a style="font-size: 14px;">A-</a> <a style="font-size: 14px;">A</a> <a style="font-size: 14px;">A+</a>
+        </div>
+    </div>
+
     <header>
-        <div class="logo">
-            <span>🛡️</span>
-            <span data-translate="app_title">Gate Security</span>
+        <div class="logo-section">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/800px-Emblem_of_India.svg.png"
+                class="emblem" alt="Emblem">
+            <div class="title-group">
+                <h1 data-translate="app_title">E-Gate Entry Management System</h1>
+                <p>Security & Vigilance Department | Portal for Digital Attendance</p>
+            </div>
         </div>
-        <div class="lang-switch">
-            <button class="lang-btn active" onclick="setLanguage('en')">English</button>
-            <button class="lang-btn" onclick="setLanguage('hi')">हिंदी (Hindi)</button>
-        </div>
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/95/Digital_India_logo.svg/1200px-Digital_India_logo.svg.png"
+            class="digital-india" alt="Digital India">
     </header>
 
     <div class="container">
@@ -362,166 +390,141 @@
         <!-- Left: IN -->
         <div class="side-panel">
             <div class="panel-header">
-                <span class="panel-title" data-translate="list_in_title">Entry History</span>
-                <span class="panel-subtitle" data-translate="list_in_desc">People currently inside</span>
+                <span class="panel-title" data-translate="list_in_title">Entry Log (अंदर)</span>
+                <span class="panel-subtitle" data-translate="list_in_desc">Real-time entry verification list</span>
             </div>
-            <div class="list-scroller" id="inList">
-                <!-- Items go here -->
-            </div>
+            <div class="list-scroller" id="inList"></div>
         </div>
 
-        <!-- Center: Activity -->
+        <!-- Center: Hero Area -->
         <div class="center-panel">
             <div class="scan-area" id="mainCard">
-                <div class="status-text" id="heroStatus" data-translate="status_wait">Ready to Scan</div>
+                <div class="status-text" id="heroStatus" data-translate="status_wait">Ready for Authentication</div>
                 <div class="big-avatar" id="heroImg">👤</div>
                 <div class="hero-name" id="heroName">---</div>
                 <div class="hero-id" id="heroID">---</div>
-                <div class="time-pill" id="heroTime">--:--</div>
+                <div class="time-pill" id="heroTime">--:--:--</div>
             </div>
 
+            <!-- Manual Entry Section -->
             <div class="manual-box">
-                <div class="manual-title" data-translate="manual_title">Card not working? Type ID</div>
+                <div class="manual-title" data-translate="manual_title">Manual Authentication Form (Form 12-A)</div>
                 <div class="form-row">
-                    <!-- Simplified inputs -->
-                    <select id="manYear" class="big-input" style="flex:0.5">
-                        <!-- Years populated by JS -->
-                    </select>
+                    <select id="manYear" class="big-input" style="flex:0.5"></select>
                     <select id="manDept" class="big-input" style="flex:0.6">
                         <option value="KUCP">KUCP</option>
                         <option value="KUEC">KUEC</option>
                         <option value="KUAD">KUAD</option>
                     </select>
-                    <input type="tel" id="manRoll" class="big-input" placeholder="1234" maxlength="4">
-                    <button class="action-btn btn-green" onclick="manualEntry('in')" data-translate="btn_in">IN</button>
-                    <button class="action-btn btn-orange" onclick="manualEntry('out')"
-                        data-translate="btn_out">OUT</button>
+                    <input type="tel" id="manRoll" class="big-input" placeholder="Roll No" maxlength="4">
+                    <button class="action-btn btn-green" onclick="manualEntry('in')" data-translate="btn_in">Log
+                        IN</button>
+                    <button class="action-btn btn-orange" onclick="manualEntry('out')" data-translate="btn_out">Log
+                        OUT</button>
                 </div>
             </div>
         </div>
 
         <!-- Right: OUT -->
         <div class="side-panel">
-            <div class="panel-header">
-                <span class="panel-title" data-translate="list_out_title">Exit History</span>
-                <span class="panel-subtitle" data-translate="list_out_desc">People who left recently</span>
+            <div class="panel-header" style="background: #444;">
+                <span class="panel-title" data-translate="list_out_title">Exit Log (बाहर)</span>
+                <span class="panel-subtitle" data-translate="list_out_desc">Real-time exit verification list</span>
             </div>
-            <div class="list-scroller" id="outList">
-                <!-- Items go here -->
-            </div>
+            <div class="list-scroller" id="outList"></div>
         </div>
     </div>
 
-    <!-- Hidden Tech Settings -->
-    <div class="tech-trigger" onclick="toggleSettings()">⚙️</div>
+    <footer>
+        This portal is designed, developed by Satyendra, IIIT Kota. <br>
+    </footer>
+
+    <!-- Technician Settings -->
+    <div class="tech-trigger" onclick="toggleSettings()">⚙️ Admin Config</div>
     <div class="backdrop" id="modalBackdrop" onclick="toggleSettings()"></div>
     <div class="settings-modal" id="settingsModal">
-        <h3 style="margin-bottom:15px;">Technician Setup</h3>
-        <div style="margin-bottom:15px;">
-            <label style="display:block; font-size:12px; color:#64748b;">IN Reader Device</label>
+        <h4 style="margin-bottom:10px; border-bottom:1px solid #ddd">System Configuration</h4>
+        <div style="margin-bottom:10px;">
+            <label style="font-size:11px; font-weight:bold;">IN Reader</label>
             <select id="inReaderSelect" class="big-input" style="width:100%"
                 onchange="handleReaderChange('in')"></select>
         </div>
-        <div>
-            <label style="display:block; font-size:12px; color:#64748b;">OUT Reader Device</label>
+        <div style="margin-bottom:10px;">
+            <label style="font-size:11px; font-weight:bold;">OUT Reader</label>
             <select id="outReaderSelect" class="big-input" style="width:100%"
                 onchange="handleReaderChange('out')"></select>
         </div>
-        <div style="margin-top:10px; font-size:12px; color:#64748b;" id="wsStatusText">Disconnected</div>
+        <div style="font-size:11px; color:#666;" id="wsStatusText">Disconnected</div>
     </div>
 
+    <!-- START OF ORIGINAL JAVASCRIPT -->
     <script>
         /* --- Configuration --- */
-        const API_BASE = 'http://localhost:8080';
-        const WS_URL = 'ws://localhost:8080/ws';
+        const API_BASE = window.location.origin;
+        const WS_URL = `ws://${window.location.host}/ws`;
 
         /* --- Language Dictionary --- */
         const TRANSLATIONS = {
             en: {
-                app_title: "Gate Security",
-                list_in_title: "Entry List",
-                list_in_desc: "Students who entered inside",
-                list_out_title: "Exit List",
-                list_out_desc: "Students who went outside",
-                status_wait: "Ready. Please tap card.",
-                status_in: "Allowed Entry",
-                status_out: "Exit Recorded",
-                manual_title: "Card not working? Enter details manually",
-                btn_in: "ENTER (IN)",
-                btn_out: "EXIT (OUT)",
-                unknown: "Unknown ID"
+                app_title: "E-Gate Entry Management System",
+                list_in_title: "Entry Log (अंदर)",
+                list_in_desc: "Real-time entry verification list",
+                list_out_title: "Exit Log (बाहर)",
+                list_out_desc: "Real-time exit verification list",
+                status_wait: "Ready for Authentication",
+                status_in: "Authorized: ENTRY",
+                status_out: "Authorized: EXIT",
+                manual_title: "Manual Authentication Form (Form 12-A)",
+                btn_in: "Log IN",
+                btn_out: "Log OUT",
+                unknown: "Unknown Beneficiary"
             },
             hi: {
-                app_title: "गेट सुरक्षा सिस्टम",
-                list_in_title: "अंदर आने वालों की लिस्ट",
-                list_in_desc: "जो छात्र अभी कॉलेज के अंदर आए हैं",
-                list_out_title: "बाहर जाने वालों की लिस्ट",
-                list_out_desc: "जो छात्र अभी गेट से बाहर गए हैं",
-                status_wait: "कार्ड मशीन पर लगाएं",
-                status_in: "स्वागत है (अंदर जाएं)",
-                status_out: "अलविदा (जा सकते हैं)",
-                manual_title: "अगर कार्ड खराब है, तो यहाँ रोल नंबर लिखें",
-                btn_in: "अंदर (IN)",
-                btn_out: "बाहर (OUT)",
-                unknown: "पहचान नहीं मिली"
+                app_title: "ई-गेट प्रवेश प्रबंधन प्रणाली",
+                list_in_title: "प्रवेश लॉग (Entry)",
+                list_in_desc: "छात्रों के प्रवेश की वास्तविक समय सूची",
+                list_out_title: "निकास लॉग (Exit)",
+                list_out_desc: "छात्रों के निकास की वास्तविक समय सूची",
+                status_wait: "प्रमाणीकरण के लिए तैयार",
+                status_in: "प्रवेश अधिकृत: IN",
+                status_out: "निकास अधिकृत: OUT",
+                manual_title: "मैनुअल प्रमाणीकरण फॉर्म (प्रपत्र 12-ए)",
+                btn_in: "प्रवेश दर्ज करें",
+                btn_out: "निकास दर्ज करें",
+                unknown: "अज्ञात लाभार्थी"
             }
         };
 
         let currentLang = 'en';
 
-        /* --- Initialization --- */
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Load Language Preference
             const savedLang = localStorage.getItem('gate_lang');
             if (savedLang) setLanguage(savedLang);
             else setLanguage('en');
-
-            // 2. Load Years
             loadYearRange();
-
-            // 3. Start System
             connectWebSocket();
             loadRecentData();
-            loadReaders(); // Silent technician load
+            loadReaders();
         });
 
-        /* --- Language Logic --- */
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('gate_lang', lang);
-
-            // Update Buttons UI
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            const btnIndex = lang === 'en' ? 0 : 1;
-            document.querySelectorAll('.lang-btn')[btnIndex].classList.add('active');
-
-            // Update Text on Screen
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
-                if (TRANSLATIONS[lang][key]) {
-                    el.textContent = TRANSLATIONS[lang][key];
-                }
+                if (TRANSLATIONS[lang][key]) el.textContent = TRANSLATIONS[lang][key];
             });
-
-            // Reset Hero Text if waiting
             const hero = document.getElementById('mainCard');
             if (!hero.classList.contains('status-in') && !hero.classList.contains('status-out')) {
                 document.getElementById('heroStatus').textContent = TRANSLATIONS[lang].status_wait;
             }
         }
 
-        /* --- WebSocket & Real-time Logic --- */
         function connectWebSocket() {
             const ws = new WebSocket(WS_URL);
             const statusTxt = document.getElementById('wsStatusText');
-
-            ws.onopen = () => { statusTxt.textContent = "System Connected ✅"; statusTxt.style.color = "green"; };
-            ws.onclose = () => {
-                statusTxt.textContent = "Reconnecting...";
-                statusTxt.style.color = "red";
-                setTimeout(connectWebSocket, 3000);
-            };
-
+            ws.onopen = () => { statusTxt.textContent = "System Status: Online ✅"; statusTxt.style.color = "green"; };
+            ws.onclose = () => { statusTxt.textContent = "Status: Reconnecting..."; statusTxt.style.color = "red"; setTimeout(connectWebSocket, 3000); };
             ws.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 if (data.type === 'tap') handleTap(data);
@@ -529,9 +532,7 @@
         }
 
         function handleTap(data) {
-            // 1. Update Center Screen
             updateHero(data);
-            // 2. Update Lists
             addToList(data.direction, data);
         }
 
@@ -543,23 +544,13 @@
             const idField = document.getElementById('heroID');
             const time = document.getElementById('heroTime');
 
-            // Reset classes
             card.className = 'scan-area';
-            void card.offsetWidth; // force reflow
-
-            // Image
-            if (data.image_path) {
-                img.innerHTML = `<img src="${API_BASE}${data.image_path}" onerror="this.parentElement.innerHTML='👤'">`;
-            } else {
-                img.innerHTML = '👤';
-            }
-
-            // Text
+            void card.offsetWidth;
+            img.innerHTML = data.image_path ? `<img src="${data.image_path}" onerror="this.parentElement.innerHTML='👤'">` : '👤';
             name.textContent = data.name || TRANSLATIONS[currentLang].unknown;
             idField.textContent = data.student_id || "";
             time.textContent = new Date().toLocaleTimeString();
 
-            // Color & Status Message
             if (data.direction === 'in') {
                 card.classList.add('status-in');
                 status.textContent = TRANSLATIONS[currentLang].status_in;
@@ -567,132 +558,82 @@
                 card.classList.add('status-out');
                 status.textContent = TRANSLATIONS[currentLang].status_out;
             }
-
+            // speak(name.textContent + ". " + status.textContent);
         }
 
-        /* --- List Management --- */
         function addToList(direction, data) {
             const listId = direction === 'in' ? 'inList' : 'outList';
             const container = document.getElementById(listId);
-
-            let imgHtml = '<div class="avatar-small">👤</div>';
-            if (data.image_path) {
-                imgHtml = `<div class="avatar-small"><img src="${API_BASE}${data.image_path}" onerror="this.parentElement.innerHTML='👤'"></div>`;
-            }
-
-            const html = `
-                <div class="person-card">
-                    ${imgHtml}
-                    <div class="person-info">
-                        <h4>${data.name || 'Unknown'}</h4>
-                        <p>${data.student_id} • ${new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
-                </div>
-            `;
-
+            const imgHtml = data.image_path ? `<div class="avatar-small"><img src="${data.image_path}" onerror="this.parentElement.innerHTML='👤'"></div>` : '<div class="avatar-small">👤</div>';
+            const html = `<div class="person-card">${imgHtml}<div class="person-info"><h4>${data.name || 'Unknown'}</h4><p>${data.student_id} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p></div></div>`;
             container.insertAdjacentHTML('afterbegin', html);
-            if (container.children.length > 30) container.lastElementChild.remove();
+            if (container.children.length > 20) container.lastElementChild.remove();
         }
 
         async function loadRecentData() {
             try {
                 ['in', 'out'].forEach(async dir => {
-                    const res = await fetch(`${API_BASE}/api/entries/recent?direction=${dir}&limit=10`);
+                    const res = await fetch(`/api/entries/recent?direction=${dir}&limit=10`);
                     const json = await res.json();
                     const container = document.getElementById(dir === 'in' ? 'inList' : 'outList');
                     container.innerHTML = '';
-                    if (json.entries) {
-                        json.entries.forEach(e => addToList(dir, e)); // Note: this reverses order, simple fix is sufficient for display
-                    }
+                    if (json.entries) json.entries.forEach(e => addToList(dir, e));
                 });
-            } catch (e) { console.error("Error loading lists", e); }
+            } catch (e) { }
         }
 
-        /* --- Manual Entry --- */
         async function loadYearRange() {
             const yearSelect = document.getElementById('manYear');
             const curYear = new Date().getFullYear();
-            for (let i = curYear; i >= 2020; i--) {
-                yearSelect.add(new Option(i, i));
-            }
+            for (let i = curYear; i >= 2020; i--) yearSelect.add(new Option(i, i));
         }
 
         async function manualEntry(direction) {
             const roll = document.getElementById('manRoll').value;
-            if (!roll) {
-                alert(currentLang === 'hi' ? "कृपया रोल नंबर भरें" : "Please enter Roll Number");
-                return;
-            }
-
-            const payload = {
-                year: document.getElementById('manYear').value,
-                department: document.getElementById('manDept').value,
-                roll_number: roll,
-                direction: direction
-            };
-
+            if (!roll) return alert(currentLang === 'hi' ? "कृपया रोल नंबर भरें" : "Please enter Roll Number");
+            const payload = { year: document.getElementById('manYear').value, department: document.getElementById('manDept').value, roll_number: roll, direction: direction };
             try {
-                const res = await fetch(`${API_BASE}/api/entry/manual`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (res.status === 404) {
-                    alert(currentLang === 'hi' ? "छात्र डेटाबेस में नहीं मिला!" : "Student not found in database!");
-                    return;
-                }
-
-                const data = await res.json();
-
-                if (data.success) {
-                    document.getElementById('manRoll').value = ""; // Clear
-                } else {
-                    alert("Error: " + (data.error || "Unknown error"));
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Connection Error");
-            }
+                const res = await fetch(`/api/entry/manual`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (res.status === 404) alert("Data not found");
+                else document.getElementById('manRoll').value = "";
+            } catch (e) { alert("Error"); }
         }
 
-        /* --- Technician Settings (Hidden) --- */
         function toggleSettings() {
             document.getElementById('settingsModal').classList.toggle('show');
             document.getElementById('modalBackdrop').classList.toggle('show');
         }
 
         async function loadReaders() {
-            // Fetch readers logic (same as previous, just hidden)
             try {
-                const rRes = await fetch(`${API_BASE}/api/readers`);
+                const rRes = await fetch(`/api/readers`);
                 const rData = await rRes.json();
-                const cRes = await fetch(`${API_BASE}/api/readers/config`);
+                const cRes = await fetch(`/api/readers/config`);
                 const cData = await cRes.json();
-
                 const inSel = document.getElementById('inReaderSelect');
                 const outSel = document.getElementById('outReaderSelect');
-
                 [inSel, outSel].forEach(s => {
                     s.innerHTML = '<option value="">-- Select --</option>';
                     rData.readers.forEach(r => s.add(new Option(r.name, r.name)));
                 });
-
                 if (cData.in_reader) inSel.value = cData.in_reader;
                 if (cData.out_reader) outSel.value = cData.out_reader;
-
-            } catch (e) { console.log("Reader fetch failed"); }
+            } catch (e) { }
         }
 
         function handleReaderChange() {
             const inR = document.getElementById('inReaderSelect').value;
             const outR = document.getElementById('outReaderSelect').value;
-            fetch(`${API_BASE}/api/readers/config`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ in_reader: inR, out_reader: outR })
-            });
+            fetch(`/api/readers/config`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ in_reader: inR, out_reader: outR }) });
         }
+
+        // function speak(text) {
+        //     if ('speechSynthesis' in window) {
+        //         const u = new SpeechSynthesisUtterance(text);
+        //         u.lang = currentLang === 'hi' ? 'hi-IN' : 'en-IN';
+        //         window.speechSynthesis.speak(u);
+        //     }
+        // }
     </script>
 </body>
 
